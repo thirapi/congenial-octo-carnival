@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { LocationData } from "@/lib/timber-data";
 import { useCart } from "@/lib/cart-store";
 import { useRouter, usePathname } from "next/navigation";
@@ -162,11 +163,28 @@ export function Header({ location, setLocation }: HeaderProps) {
               Contact
             </a>
             <a
-              href="#"
-              className="text-[13px] font-black text-[#1B4332] relative py-1 uppercase tracking-widest"
+              href="/contract"
+              className={cn(
+                "text-[13px] font-bold text-[#1B4332] hover:opacity-70 transition-all uppercase tracking-widest relative py-1",
+                pathname === "/contract" && "font-black",
+              )}
+            >
+              Contract
+              {pathname === "/contract" && (
+                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#1B4332]" />
+              )}
+            </a>
+            <a
+              href="/"
+              className={cn(
+                "text-[13px] font-bold text-[#1B4332] hover:opacity-70 transition-all uppercase tracking-widest relative py-1",
+                pathname === "/" && "font-black",
+              )}
             >
               Shop
-              <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#1B4332]" />
+              {pathname === "/" && (
+                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#1B4332]" />
+              )}
             </a>
           </nav>
 

@@ -119,7 +119,7 @@ export function RSTTable({
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <label className="flex items-center gap-2 cursor-pointer">
-            <input
+            {/* <input
               type="checkbox"
               disabled={filteredData.length === 0}
               checked={
@@ -128,11 +128,9 @@ export function RSTTable({
               }
               onChange={toggleAll}
               className="h-4 w-4 rounded border-border"
-            />
+            /> */}
             <span className="text-sm font-semibold text-foreground">
-              {selectedItems.length > 0
-                ? `${selectedItems.length} dipilih`
-                : "Pilih Semua"}
+              {selectedItems.length} dipilih
             </span>
           </label>
           <span className="text-sm font-medium text-muted-foreground">
@@ -155,7 +153,7 @@ export function RSTTable({
           <thead>
             <tr className="border-b border-border bg-muted/50 whitespace-nowrap">
               <th className="px-4 py-3 sticky left-0 bg-muted/50 z-10 w-10">
-                <input
+                {/* <input
                   type="checkbox"
                   disabled={filteredData.length === 0}
                   checked={
@@ -164,7 +162,7 @@ export function RSTTable({
                   }
                   onChange={toggleAll}
                   className="h-4 w-4 rounded border-border"
-                />
+                /> */}
               </th>
               {[
                 "Ketersediaan",
