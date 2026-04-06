@@ -585,7 +585,7 @@ export const finishedProducts: FinishedProduct[] = [
         price: 3500000,
         stock: 20,
         grade: 'A',
-        image: 'https://images.unsplash.com/photo-1577146333359-b9fdd213000c?q=80&w=800&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop',
         unit: 'PIK Gresik',
     },
     {
@@ -663,7 +663,7 @@ export const finishedProducts: FinishedProduct[] = [
         price: 4800000,
         stock: 10,
         grade: 'A',
-        image: 'https://images.unsplash.com/photo-1505691938895-1758d7eaa511?q=80&w=800&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop',
         unit: 'PIK Jatirogo',
     },
     {
@@ -676,7 +676,7 @@ export const finishedProducts: FinishedProduct[] = [
         price: 25000,
         stock: 1500,
         grade: 'C',
-        image: 'https://images.unsplash.com/photo-1626808642875-0aa545452fe8?q=80&w=800&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop',
         unit: 'PIK Jatirogo',
     },
     // ---- ADDED MISSING PERMUTATIONS: RIMBA - HOME DECORE ----
@@ -690,7 +690,7 @@ export const finishedProducts: FinishedProduct[] = [
         price: 1800000,
         stock: 25,
         grade: 'A',
-        image: 'https://images.unsplash.com/photo-1577146333359-b9fdd213000c?q=80&w=800&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop',
         unit: 'PIK Gresik',
     },
     {
@@ -729,7 +729,7 @@ export const finishedProducts: FinishedProduct[] = [
         price: 2100000,
         stock: 20,
         grade: 'A',
-        image: 'https://images.unsplash.com/photo-1505691938895-1758d7eaa511?q=80&w=800&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop',
         unit: 'PIK Jatirogo',
     },
     // ---- ADDED MISSING PERMUTATIONS: JATI - HOME CONSTRUCTION ----
@@ -782,7 +782,7 @@ export const finishedProducts: FinishedProduct[] = [
         price: 55000,
         stock: 500,
         grade: 'A',
-        image: 'https://images.unsplash.com/photo-1626808642875-0aa545452fe8?q=80&w=800&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop',
         unit: 'PIK Jatirogo',
     },
 ]

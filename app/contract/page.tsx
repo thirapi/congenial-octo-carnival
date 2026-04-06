@@ -40,6 +40,7 @@ import {
   ChevronRight,
   Package,
   MapPin,
+  Ruler,
   TreeDeciduous,
   History,
   Info,
@@ -77,6 +78,7 @@ const cascadeData = {
 };
 
 type Step = "form" | "offering" | "active";
+type PageView = "landing" | "app";
 
 interface RequestedGrade {
   id: string;
@@ -134,8 +136,11 @@ const MOCK_DELIVERY_LOGS: DeliveryLog[] = [
 ];
 
 export default function ContractPage() {
+  const [pageView, setPageView] = useState<PageView>("landing");
   const [step, setStep] = useState<Step>("form");
   const [showLogs, setShowLogs] = useState(false);
+  const [productTab, setProductTab] = useState<"rst" | "finished">("rst");
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [location, setLocation] = useState<LocationData>({
     wilayah: "GM KBM IK",
     manager: null,
@@ -310,6 +315,299 @@ export default function ContractPage() {
     setErrors({});
     setStep("offering");
   };
+
+  if (pageView === "landing") {
+    return (
+      <div className="min-h-screen bg-white">
+        <Header location={location} setLocation={setLocation} />
+
+        {/* Hero Section with Video Background */}
+        <section
+          className="relative min-h-[85vh] flex items-center justify-center pt-44 pb-24 px-4 overflow-hidden"
+          style={{ fontFamily: "'Poppins', sans-serif" }}
+        >
+          {/* Video Background Container */}
+          <div className="absolute inset-0 z-0">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover scale-105"
+            >
+              <source
+                src="/Indonesian_Forest_Ranger_Documentary_Film.mp4"
+                type="video/mp4"
+              />
+            </video>
+            {/* Dark Sharp Overlay */}
+            <div className="absolute inset-0 bg-black/70" />
+            {/* Subtle Gradient for Extra Depth */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#1B4332]/30 via-transparent to-black/80" />
+          </div>
+
+          <div className="relative z-10 max-w-7xl mx-auto text-center space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-1000">
+            <h1 className="text-4xl md:text-7xl font-bold text-white leading-tight">
+              Mengelola Hasil Hutan Secara{" "}
+              <span className="text-[#84cc16]">Berkelanjutan</span> <br />
+              untuk Masa Depan Indonesia
+            </h1>
+            <p className="text-white/90 max-w-3xl mx-auto text-xl leading-relaxed font-normal">
+              Menjamin ketersediaan bahan baku kayu industri secara profesional
+              dan bertanggung jawab untuk mendukung pertumbuhan ekonomi nasional
+              yang lestari melalui pengelolaan hutan yang presisi.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
+              <Button
+                className="w-full sm:w-auto bg-[#FF7A00] hover:bg-[#E66E00] text-white font-semibold px-8 h-[44px] rounded-full shadow-xl shadow-orange-950/20 transition-all active:scale-95 border-0"
+                onClick={() => setPageView("app")}
+              >
+                Mulai Draf Kontrak
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full sm:w-auto bg-transparent border-[#84cc16] text-[#84cc16] hover:bg-[#84cc16]/10 hover:border-[#84cc16] hover:text-[#84cc16] font-normal px-8 h-[44px] rounded-full transition-all flex items-center justify-center group"
+              >
+                Jelajahi Hutan Kami{" "}
+                <ChevronRight className="ml-1 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* Finished Product Showcase Section */}
+        <section className="py-24 px-4 bg-[#FBFBFB]">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold text-[#1B4332] mb-4">
+                Produk Olahan <span className="text-[#FF7A00]">(Finished Product)</span>
+              </h2>
+              <p className="text-gray-500 max-w-lg mx-auto">
+                Pilihan produk kayu olahan siap pakai dengan standar kualitas tinggi untuk kebutuhan dekorasi dan konstruksi.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {finishedProducts.slice(0, 4).map((item, i) => (
+                <div
+                  key={i}
+                  className="flex flex-col rounded-xl border border-border bg-white overflow-hidden hover:shadow-md transition-all duration-300 group cursor-default"
+                >
+                  {/* Product Image Area */}
+                  <div className="relative aspect-square bg-muted overflow-hidden">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div className="absolute top-3 left-3">
+                      <span className="bg-white/90 backdrop-blur-sm text-[#40916C] font-bold text-[10px] px-2.5 py-1 rounded-full shadow-sm border border-white/50">
+                        {item.woodType}
+                      </span>
+                    </div>
+                    <div className="absolute top-3 right-3">
+                      <Badge className="bg-[#40916C] text-white border-none font-bold text-[10px]">
+                        Grade {item.grade}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  {/* Product Info Area */}
+                  <div className="flex flex-col gap-2 p-4">
+                    <div>
+                      <div className="flex items-center text-[10px] text-muted-foreground/60 mb-1 font-medium italic">
+                        <span>{item.category}</span>
+                        <span className="mx-1.5 opacity-40">/</span>
+                        <span>{item.subCategory}</span>
+                      </div>
+                      <h3 className="text-sm font-bold text-[#1B4332] leading-tight group-hover:text-[#40916C] transition-colors line-clamp-2 min-h-[2.5rem]">
+                        {item.name}
+                      </h3>
+                      <div className="flex items-center gap-1.5 mt-2 text-[11px] text-muted-foreground">
+                        <Ruler className="w-3.5 h-3.5 opacity-70" />
+                        <span className="text-[#1B4332]/80 font-medium">
+                          {item.dimensions}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="pt-3 mt-auto flex items-center justify-between">
+                      <div className="text-lg font-extrabold text-[#40916C]">
+                        Rp {item.price.toLocaleString("id-ID")}
+                      </div>
+                      <div className="text-[10px] text-muted-foreground font-medium flex items-center gap-1">
+                        <Package className="w-3.5 h-3.5" />
+                        <span>Stok: {item.stock}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-12 flex justify-center">
+              <Button
+                variant="outline"
+                className="rounded-full px-8 h-[44px] border-gray-200 font-semibold text-xs text-[#1B4332] hover:bg-white hover:text-[#40916C] hover:border-[#40916C] transition-all"
+                onClick={() => {
+                  setPageView("app");
+                  setProductTab("finished");
+                }}
+              >
+                Lihat Semua Produk Olahan <ArrowRight className="ml-2 w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* RST Product Showcase Section */}
+        <section className="py-24 px-4 bg-white border-t border-gray-50">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold text-[#1B4332] mb-4">
+                Kayu Gergajian <span className="text-[#FF7A00]">(Raw Sawn Timber)</span>
+              </h2>
+              <p className="text-gray-500 max-w-lg mx-auto">
+                Bahan baku komponen kayu industri dengan spesifikasi teknis presisi untuk kebutuhan manufaktur Anda.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {rstData.slice(0, 4).map((item, i) => (
+                <div
+                  key={i}
+                  className="bg-white rounded-xl border border-gray-100 p-6 hover:border-[#40916C]/30 hover:shadow-lg hover:shadow-green-900/5 transition-all group"
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <Badge className="bg-[#40916C]/10 text-[#40916C] border-0 text-[10px] font-semibold px-2 py-0.5">
+                      {item.jenisKayu}
+                    </Badge>
+                    <span className="text-[10px] font-bold text-[#1B4332] opacity-30">
+                      #{item.noKapling}
+                    </span>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="text-sm font-bold text-[#1B4332] line-clamp-1 group-hover:text-[#40916C] transition-colors">
+                        {item.productType}
+                      </h3>
+                      <p className="text-[10px] font-medium text-muted-foreground uppercase mt-0.5">
+                        {item.sortimen}
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-y-3 pt-4 border-t border-gray-50">
+                      <div>
+                        <p className="text-[9px] font-semibold text-muted-foreground opacity-40 mb-1">Grade</p>
+                        <p className="text-xs font-semibold text-[#1B4332]">Mutu {item.mutu}</p>
+                      </div>
+                      <div>
+                        <p className="text-[9px] font-semibold text-muted-foreground opacity-40 mb-1">Volume</p>
+                        <p className="text-xs font-semibold text-[#1B4332]">{item.volume.toFixed(3)} m³</p>
+                      </div>
+                      <div className="col-span-2 pt-2 border-t border-gray-50">
+                        <p className="text-[9px] font-semibold text-muted-foreground opacity-40 mb-1">Estimasi Harga Akhir</p>
+                        <p className="text-base font-extrabold text-[#40916C]">
+                          Rp {item.hargaAkhir.toLocaleString("id-ID")}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-12 flex justify-center">
+              <Button
+                variant="outline"
+                className="rounded-full px-8 h-[44px] border-gray-200 font-semibold text-xs text-[#1B4332] hover:bg-white hover:text-[#40916C] hover:border-[#40916C] transition-all"
+                onClick={() => {
+                  setPageView("app");
+                  setProductTab("rst");
+                }}
+              >
+                Lihat Semua Produk RST <ArrowRight className="ml-2 w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="py-24 px-4 bg-[#F8FDF5] border-t border-[#E8F3E1]">
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-16 space-y-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-[#1B4332]">
+                Frequently <span className="text-[#FF7A00]">Asked</span>{" "}
+                Question
+              </h2>
+              <p className="text-gray-500">
+                Pertanyaan yang sering diajukan mengenai prosedur kontrak dan
+                pengadaan kayu industri.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              {[
+                {
+                  q: "Siapa yang dapat mengajukan pembelian secara kontrak?",
+                  a: "Pembelian secara kontrak diperuntukkan bagi pelanggan industri atau perusahaan dengan volume pembelian di atas 200 m³.",
+                },
+                {
+                  q: "Apa langkah awal untuk menjadi pembeli kontrak?",
+                  a: "Langkah pertama adalah melakukan registrasi melalui sistem POTP (Toko Perhutani) dan mengunggah dokumen legalitas perusahaan untuk verifikasi.",
+                },
+                {
+                  q: "Dokumen legalitas apa saja yang wajib disiapkan?",
+                  a: "Dokumen yang diperlukan antara lain KTP pimpinan, NPWP Perusahaan, NIB, serta Izin Usaha Industri Primer Hasil Hutan Kayu (PBPHH).",
+                },
+                {
+                  q: "Bagaimana sistem pembayaran untuk transaksi kontrak?",
+                  a: "Pembayaran dilakukan melalui sistem deposit jaminan yang disimpan di rekening KBM Pemasaran Perum Perhutani terkait sesuai kesepakatan kontrak.",
+                },
+                {
+                  q: "Kapan kayu dapat diambil setelah transaksi selesai?",
+                  a: "Kayu dapat diambil di TPK yang ditentukan paling cepat H+1 setelah penerbitan kuitansi/invoice resmi, dengan mendaftarkan rencana angkutan melalui SIPUHH.",
+                },
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  className="bg-white border border-[#E8F3E1] rounded-xl overflow-hidden shadow-sm"
+                >
+                  <button
+                    onClick={() =>
+                      setOpenFaqIndex(openFaqIndex === i ? null : i)
+                    }
+                    className="w-full flex items-center justify-between p-6 bg-white hover:bg-[#F0F7ED] transition-colors text-left group"
+                  >
+                    <span className="font-semibold text-[#1B4332] text-sm">
+                      {item.q}
+                    </span>
+                    <ChevronDown
+                      className={cn(
+                        "w-4 h-4 text-[#40916C]/40 transition-transform duration-300",
+                        openFaqIndex === i && "rotate-180 text-[#40916C]",
+                      )}
+                    />
+                  </button>
+                  <div
+                    className={cn(
+                      "overflow-hidden transition-all duration-300",
+                      openFaqIndex === i ? "max-h-96" : "max-h-0",
+                    )}
+                  >
+                    <div className="p-6 pt-0 text-sm text-gray-500 leading-relaxed border-t border-[#E8F3E1] bg-white">
+                      {item.a}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FBFBFB]">
@@ -760,7 +1058,7 @@ export default function ContractPage() {
                     <span className="text-xs font-semibold text-muted-foreground">
                       Total Volume / Kuantitas
                     </span>
-                    <span className="text-2xl font-bold text-[#1B4332] leading-none tracking-tight">
+                    <span className="text-2xl font-bold text-[#1B4332] leading-none">
                       {totalVolume.toFixed(2)}{" "}
                       <span className="text-sm font-semibold opacity-50">
                         m³ / pcs
@@ -772,7 +1070,7 @@ export default function ContractPage() {
                     <span className="text-xs font-semibold text-muted-foreground">
                       Est. Nilai Dasar
                     </span>
-                    <span className="text-xl font-bold text-[#1B4332] tracking-tight">
+                    <span className="text-xl font-bold text-[#1B4332]">
                       Rp {estimatedTotalPrice.toLocaleString()}
                     </span>
                   </div>
@@ -926,7 +1224,7 @@ export default function ContractPage() {
                   </p>
                 </div>
                 <div className="text-left md:text-right">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1 opacity-40">
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase mb-1 opacity-40">
                     Lokasi Penawaran
                   </p>
                   <p className="font-bold text-[#1B4332] text-sm uppercase">
@@ -939,13 +1237,13 @@ export default function ContractPage() {
                 <table className="w-full">
                   <thead className="text-left border-b border-gray-100">
                     <tr>
-                      <th className="pb-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+                      <th className="pb-4 text-[10px] font-black text-muted-foreground uppercase">
                         Sortimen Item
                       </th>
-                      <th className="pb-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest text-center">
+                      <th className="pb-4 text-[10px] font-black text-muted-foreground uppercase text-center">
                         Jumlah
                       </th>
-                      <th className="pb-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest text-right">
+                      <th className="pb-4 text-[10px] font-black text-muted-foreground uppercase text-right">
                         Total Dasar
                       </th>
                     </tr>
@@ -959,7 +1257,7 @@ export default function ContractPage() {
                             <p className="font-bold text-[#1B4332] text-[15px]">
                               {grade.name}
                             </p>
-                            <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest opacity-40 mt-1">
+                            <p className="text-[10px] text-muted-foreground font-medium uppercase mt-1">
                               {woodType} Timber Grade
                             </p>
                           </td>
@@ -988,10 +1286,10 @@ export default function ContractPage() {
                     </span>
                   </div>
                   <div className="flex justify-between items-center pt-5 border-t border-dashed border-gray-200">
-                    <span className="text-lg font-semibold text-[#1B4332] uppercase tracking-tight">
+                    <span className="text-lg font-semibold text-[#1B4332] uppercase">
                       Total Nilai Kontrak
                     </span>
-                    <span className="text-2xl font-semibold text-[#1B4332] tracking-tighter">
+                    <span className="text-2xl font-semibold text-[#1B4332]">
                       Rp {(estimatedTotalPrice * 1.11).toLocaleString()}
                     </span>
                   </div>
@@ -1029,7 +1327,7 @@ export default function ContractPage() {
                   </span>
                 </div>
                 <div>
-                  <h2 className="text-3xl font-bold tracking-tight leading-none uppercase">
+                  <h2 className="text-3xl font-bold leading-none uppercase">
                     Dashboard Kontrak
                   </h2>
                   <p className="text-sm font-medium opacity-60 mt-2 max-w-md">
@@ -1043,7 +1341,7 @@ export default function ContractPage() {
                   <p className="text-[9px] font-semibold uppercase opacity-30 mb-1">
                     Berjalan
                   </p>
-                  <p className="text-3xl font-semibold italic tracking-tighter">
+                  <p className="text-3xl font-semibold italic">
                     02
                   </p>
                 </div>
@@ -1051,7 +1349,7 @@ export default function ContractPage() {
                   <p className="text-[9px] font-semibold uppercase opacity-30 mb-1">
                     Outstanding
                   </p>
-                  <p className="text-3xl font-semibold italic tracking-tighter">
+                  <p className="text-3xl font-semibold italic">
                     412{" "}
                     <span className="text-xs font-medium opacity-40">m³</span>
                   </p>
@@ -1067,7 +1365,7 @@ export default function ContractPage() {
                       <Badge className="bg-[#40916C]/10 text-[#40916C] border-0 text-[9px] font-bold px-3">
                         VERIFIED
                       </Badge>
-                      <h3 className="text-3xl font-bold text-[#1B4332] tracking-tighter uppercase leading-none">
+                      <h3 className="text-3xl font-bold text-[#1B4332] uppercase leading-none">
                         CTR-IND-24-99X
                       </h3>
                       <p className="text-[11px] font-semibold text-[#1B4332]/40 uppercase">
@@ -1119,7 +1417,7 @@ export default function ContractPage() {
                       <p className="text-[10px] font-semibold text-muted-foreground uppercase opacity-40">
                         Total Progress Realisasi
                       </p>
-                      <h4 className="text-4xl font-semibold text-[#1B4332] tracking-tighter">
+                      <h4 className="text-4xl font-semibold text-[#1B4332]">
                         72.4%
                       </h4>
                     </div>
@@ -1142,7 +1440,7 @@ export default function ContractPage() {
                       </div>
                     </div>
                     <div className="space-y-3">
-                      <div className="flex justify-between text-[11px] font-bold text-[#CC3F0C] uppercase tracking-wide px-1">
+                      <div className="flex justify-between text-[11px] font-bold text-[#CC3F0C] uppercase px-1">
                         <span>Grade B (Mutu Pertama)</span>
                         <span className="opacity-40">88 / 200 m³</span>
                       </div>
@@ -1187,7 +1485,7 @@ export default function ContractPage() {
                   <div className="inline-flex px-3 py-1 bg-white/10 rounded-full text-[9px] font-semibold uppercase">
                     Logs History
                   </div>
-                  <DialogTitle className="text-3xl font-bold uppercase tracking-tight">
+                  <DialogTitle className="text-3xl font-bold uppercase">
                     Detail Realisasi Pasokan
                   </DialogTitle>
                 </div>

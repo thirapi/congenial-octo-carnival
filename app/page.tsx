@@ -8,7 +8,7 @@ import { FinishedProductsTab } from "@/components/timber/finished-products-tab";
 import { LocationData } from "@/lib/timber-data";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"rst" | "finished">("rst");
+  const [activeTab, setActiveTab] = useState<"rst" | "finished">("finished");
   const [location, setLocation] = useState<LocationData>({
     wilayah: null,
     manager: null,
@@ -17,7 +17,11 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-background">
-      <Header location={location} setLocation={setLocation} />
+      <Header
+        location={location}
+        setLocation={setLocation}
+        activeTab={activeTab}
+      />
       <div className="mx-auto max-w-7xl px-4 py-8">
         <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
 

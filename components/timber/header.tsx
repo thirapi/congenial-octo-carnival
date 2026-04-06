@@ -42,9 +42,10 @@ const cascadeData = {
 interface HeaderProps {
   location: LocationData;
   setLocation: (location: LocationData) => void;
+  activeTab?: string;
 }
 
-export function Header({ location, setLocation }: HeaderProps) {
+export function Header({ location, setLocation, activeTab }: HeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
   const { finishedItems, removeFinishedItem, rstItems, removeRSTItem } =
@@ -127,11 +128,11 @@ export function Header({ location, setLocation }: HeaderProps) {
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
           {/* Logo Section */}
           <div className="flex items-center">
-            <a href="/" className="hover:opacity-90 transition-opacity">
+            <a href="/" className="hover:opacity-90 transition-opacity flex items-center">
               <img
                 src="/image.png"
                 alt="Perhutani Logo"
-                className="h-14 w-auto object-contain"
+                className="h-14 w-32 object-contain" // Fixed width instead of w-auto
               />
             </a>
           </div>
@@ -177,13 +178,15 @@ export function Header({ location, setLocation }: HeaderProps) {
             <a
               href="/"
               className={cn(
-                "text-[13px] font-bold text-[#1B4332] hover:opacity-70 transition-all uppercase tracking-widest relative py-1",
+                "text-[13px] font-bold text-[#1B4332] hover:opacity-70 transition-all uppercase tracking-widest relative py-1 inline-flex flex-col items-center",
                 pathname === "/" && "font-black",
               )}
             >
-              Shop
+              <span className="flex items-center justify-center h-5">Shop</span>
+              {/* Invisible spacer for bold text stability */}
+              <span className="font-black h-0 overflow-hidden invisible select-none pointer-events-none">Shop</span>
               {pathname === "/" && (
-                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#1B4332]" />
+                <div className="absolute -bottom-1 left-0 w-full h-0.5 bg-[#1B4332]" />
               )}
             </a>
           </nav>
@@ -192,7 +195,7 @@ export function Header({ location, setLocation }: HeaderProps) {
           <div className="flex items-center gap-6">
             <button
               onClick={() => router.push("/login")}
-              className="hover:scale-110 transition-transform focus:outline-none"
+              className="w-10 h-10 flex items-center justify-center hover:scale-110 transition-transform focus:outline-none"
             >
               <img
                 src="/user.png"
@@ -200,7 +203,7 @@ export function Header({ location, setLocation }: HeaderProps) {
                 className="w-7 h-7 object-contain"
               />
             </button>
-            <button className="hover:scale-110 transition-transform focus:outline-none">
+            <button className="w-10 h-10 flex items-center justify-center hover:scale-110 transition-transform focus:outline-none">
               <img
                 src="/search.png"
                 alt="Search"
@@ -404,103 +407,109 @@ export function Header({ location, setLocation }: HeaderProps) {
         </div>
       </header>
 
-      {/* Cascading Dropdown Selection - Restored Old Style */}
-      {pathname === "/" && (
-        <div className="bg-white border-b border-border py-8">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="grid grid-cols-3 gap-4">
-              {/* Wilayah Dropdown */}
-              <div>
-                <label className="block text-xs font-semibold uppercase text-muted-foreground mb-2">
-                  Pilih Wilayah
-                </label>
-                <select
-                  value={location.wilayah || ""}
-                  onChange={(e) => handleWilayahChange(e.target.value)}
-                  className="w-full rounded border border-border bg-white px-3 py-2 text-sm text-foreground hover:border-primary focus:border-primary focus:outline-none"
-                >
-                  <option value="">-- Pilih Wilayah --</option>
-                  {wilayahOptions.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Manager Dropdown */}
-              <div>
-                <label className="block text-xs font-semibold uppercase text-muted-foreground mb-2">
-                  Pilih Manager / Kota
-                </label>
-                <select
-                  value={location.manager || ""}
-                  onChange={(e) => handleManagerChange(e.target.value)}
-                  disabled={!location.wilayah}
-                  className="w-full rounded border border-border bg-white px-3 py-2 text-sm text-foreground disabled:bg-muted disabled:text-muted-foreground hover:border-primary focus:border-primary focus:outline-none disabled:cursor-not-allowed"
-                >
-                  <option value="">-- Pilih Manager --</option>
-                  {managerOptions.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Unit Dropdown */}
-              <div>
-                <label className="block text-xs font-semibold uppercase text-muted-foreground mb-2">
-                  Pilih Unit / Lokasi
-                </label>
-                <select
-                  value={location.unit || ""}
-                  onChange={(e) => handleUnitChange(e.target.value)}
-                  disabled={!location.manager}
-                  className="w-full rounded border border-border bg-white px-3 py-2 text-sm text-foreground disabled:bg-muted disabled:text-muted-foreground hover:border-primary focus:border-primary focus:outline-none disabled:cursor-not-allowed"
-                >
-                  <option value="">-- Pilih Unit --</option>
-                  {unitOptions.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </div>
+      {/* Cascading Dropdown Selection - Smooth Vertical Deployment */}
+      <div
+        style={{ transitionProperty: 'max-height, opacity, padding' }}
+        className={cn(
+          "bg-white border-b border-border overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)]",
+          pathname === "/" && activeTab !== "finished"
+            ? "max-h-[600px] opacity-100 py-8"
+            : "max-h-0 opacity-0 py-0 invisible"
+        )}
+      >
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-3 gap-4">
+            {/* Wilayah Dropdown */}
+            <div>
+              <label className="block text-xs font-semibold uppercase text-muted-foreground mb-2">
+                Pilih Wilayah
+              </label>
+              <select
+                value={location.wilayah || ""}
+                onChange={(e) => handleWilayahChange(e.target.value)}
+                className="w-full rounded border border-border bg-white px-3 py-2 text-sm text-foreground hover:border-primary focus:border-primary focus:outline-none"
+              >
+                <option value="">-- Pilih Wilayah --</option>
+                {wilayahOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
             </div>
 
-            {/* Selected Location Summary */}
-            {location.unit && (
-              <div className="mt-6 grid grid-cols-3 gap-4 bg-muted/30 rounded p-4 border border-border">
-                <div>
-                  <p className="text-xs font-semibold uppercase text-muted-foreground">
-                    Wilayah
-                  </p>
-                  <p className="mt-1 text-sm font-semibold text-foreground">
-                    {location.wilayah}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase text-muted-foreground">
-                    Manager
-                  </p>
-                  <p className="mt-1 text-sm font-semibold text-foreground">
-                    {location.manager}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase text-muted-foreground">
-                    Unit / Lokasi
-                  </p>
-                  <p className="mt-1 text-sm font-semibold text-foreground">
-                    {location.unit}
-                  </p>
-                </div>
-              </div>
-            )}
+            {/* Manager Dropdown */}
+            <div>
+              <label className="block text-xs font-semibold uppercase text-muted-foreground mb-2">
+                Pilih Manager / Kota
+              </label>
+              <select
+                value={location.manager || ""}
+                onChange={(e) => handleManagerChange(e.target.value)}
+                disabled={!location.wilayah}
+                className="w-full rounded border border-border bg-white px-3 py-2 text-sm text-foreground disabled:bg-muted disabled:text-muted-foreground hover:border-primary focus:border-primary focus:outline-none disabled:cursor-not-allowed"
+              >
+                <option value="">-- Pilih Manager --</option>
+                {managerOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Unit Dropdown */}
+            <div>
+              <label className="block text-xs font-semibold uppercase text-muted-foreground mb-2">
+                Pilih Unit / Lokasi
+              </label>
+              <select
+                value={location.unit || ""}
+                onChange={(e) => handleUnitChange(e.target.value)}
+                disabled={!location.manager}
+                className="w-full rounded border border-border bg-white px-3 py-2 text-sm text-foreground disabled:bg-muted disabled:text-muted-foreground hover:border-primary focus:border-primary focus:outline-none disabled:cursor-not-allowed"
+              >
+                <option value="">-- Pilih Unit --</option>
+                {unitOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
+
+          {/* Selected Location Summary */}
+          {location.unit && (
+            <div className="mt-6 grid grid-cols-3 gap-4 bg-muted/30 rounded p-4 border border-border transition-all duration-300">
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">
+                  Wilayah
+                </p>
+                <p className="mt-1 text-sm font-semibold text-foreground">
+                  {location.wilayah}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">
+                  Manager
+                </p>
+                <p className="mt-1 text-sm font-semibold text-foreground">
+                  {location.manager}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">
+                  Unit / Lokasi
+                </p>
+                <p className="mt-1 text-sm font-semibold text-foreground">
+                  {location.unit}
+                </p>
+              </div>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
