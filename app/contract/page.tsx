@@ -364,18 +364,19 @@ export default function ContractPage() {
               >
                 Mulai Draf Kontrak
               </Button>
-              <Button
+              {/* <Button
                 variant="outline"
                 className="w-full sm:w-auto bg-transparent border-[#84cc16] text-[#84cc16] hover:bg-[#84cc16]/10 hover:border-[#84cc16] hover:text-[#84cc16] font-normal px-8 h-[44px] rounded-full transition-all flex items-center justify-center group"
               >
                 Jelajahi Hutan Kami{" "}
                 <ChevronRight className="ml-1 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
+              </Button> */}
             </div>
           </div>
         </section>
 
-        {/* Finished Product Showcase Section */}
+        {/* Finished Product Showcase Section - Temporarily Hidden */}
+        {false && (
         <section className="py-24 px-4 bg-[#FBFBFB]">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
@@ -447,8 +448,10 @@ export default function ContractPage() {
 
           </div>
         </section>
+        )}
 
-        {/* RST Product Showcase Section */}
+        {/* RST Product Showcase Section - Temporarily Hidden */}
+        {false && (
         <section className="py-24 px-4 bg-white border-t border-gray-50">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
@@ -507,6 +510,7 @@ export default function ContractPage() {
             </div>
           </div>
         </section>
+        )}
 
         {/* FAQ Section */}
         <section className="py-24 px-4 bg-[#F8FDF5] border-t border-[#E8F3E1]">
