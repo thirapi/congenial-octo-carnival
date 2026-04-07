@@ -27,7 +27,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 const cascadeData = {
-  "GM KBM IK": {
+  "GM Wilayah": {
     "Wilayah Jawa Timur": [
       "PIK Gresik",
       "PIK Saradan",
@@ -58,7 +58,7 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
   const totalRSTQuantity = rstItems.length;
   const totalCartItems = totalFinishedQuantity + totalRSTQuantity;
 
-  const wilayahOptions = ["GM KBM IK"];
+  const wilayahOptions = ["GM Wilayah"];
   const managerOptions = location.wilayah
     ? Object.keys(cascadeData[location.wilayah as keyof typeof cascadeData])
     : [];

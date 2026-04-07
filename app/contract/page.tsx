@@ -66,7 +66,7 @@ import {
 } from "@/components/ui/dialog";
 
 const cascadeData = {
-  "GM KBM IK": {
+  "GM Wilayah": {
     "Manager IK Jawa Timur": [
       "PIK Gresik",
       "PIK Saradan",
@@ -143,7 +143,7 @@ export default function ContractPage() {
   const [productTab, setProductTab] = useState<"rst" | "finished">("rst");
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [location, setLocation] = useState<LocationData>({
-    wilayah: "GM KBM IK",
+    wilayah: "GM Wilayah",
     manager: null,
     unit: null,
   });

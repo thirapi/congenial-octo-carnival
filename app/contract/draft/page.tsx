@@ -17,9 +17,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { FileText, UploadCloud, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const cascadeData = {
-  "GM KBM IK": {
+  "GM Wilayah": {
     "Wilayah Jawa Timur": [
       "PIK Gresik",
       "PIK Saradan",
@@ -45,8 +46,11 @@ interface RequestedGrade {
 }
 
 export default function DraftContractPage() {
+  const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [location, setLocation] = useState<LocationData>({
-    wilayah: "GM KBM IK",
+    wilayah: "GM Wilayah",
     manager: null,
     unit: null,
   });
@@ -64,6 +68,10 @@ export default function DraftContractPage() {
   const [subCatForm, setSubCatForm] = useState("");
   const [activeGrades, setActiveGrades] = useState<Record<string, number | string>>({});
   const [productNameForm, setProductNameForm] = useState("");
+
+  // Input for Detail and Files
+  const [detailForm, setDetailForm] = useState("");
+  const [filesForm, setFilesForm] = useState<File[]>([]);
 
   const rstCategories = useMemo(() => RST_PRODUCT_TYPES_ARRAY, []);
   const fpCategories = useMemo(() => FINISHED_CATEGORIES_ARRAY, []);
@@ -105,10 +113,32 @@ export default function DraftContractPage() {
     ];
   }, [typeForm, productNameForm]);
 
+  const handleFormFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    const newFiles = Array.from(e.target.files);
+    setFilesForm((prev) => [...prev, ...newFiles]);
+    e.target.value = "";
+  };
+
+  const handleFormFileRemove = (index: number) => {
+    setFilesForm((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const resetFormFields = () => {
+    setTypeForm("");
+    setCatForm("");
+    setSubCatForm("");
+    setProductNameForm("");
+    setActiveGrades({});
+    setDetailForm("");
+    setFilesForm([]);
+  };
+
   const handleAddGrade = () => {
     if (!typeForm || typeForm === "custom") return;
     if (!catForm) return;
     if (typeForm === "finished" && (!subCatForm || !productNameForm)) return;
+    if (!detailForm.trim()) return;
 
     const gradesToAdd = Object.entries(activeGrades)
       .map(([code, val]) => [code, Number(val)] as const)
@@ -117,47 +147,46 @@ export default function DraftContractPage() {
 
     const newSelected = [...selectedGrades];
     gradesToAdd.forEach(([gradeCode, qty]) => {
-      const id = `${typeForm}-${catForm}-${subCatForm}-${productNameForm}-${gradeCode}`;
-      const existsIndex = newSelected.findIndex((g) => g.id === id);
-      if (existsIndex >= 0) {
-        newSelected[existsIndex] = {
-          ...newSelected[existsIndex],
-          quantity: newSelected[existsIndex].quantity + qty,
-        };
+      const id = `${typeForm}-${catForm}-${subCatForm}-${productNameForm}-${gradeCode}-${Date.now()}`;
+      
+      const displayName = typeForm === "finished" ? productNameForm : catForm;
+      let basePrice = 0;
+      let gradeName = gradeCode;
+      
+      if (typeForm === "rst") {
+        const m = availableRstMutu.find((m) => m.code === gradeCode);
+        basePrice = m?.price || 0;
+        gradeName = m?.name || gradeCode;
       } else {
-        const displayName = typeForm === "finished" ? productNameForm : catForm;
-        let basePrice = 0;
-        let gradeName = gradeCode;
-        if (typeForm === "rst") {
-          const m = availableRstMutu.find((m) => m.code === gradeCode);
-          basePrice = m?.price || 0;
-          gradeName = m?.name || gradeCode;
-        } else {
-          const m = availableFpGrades.find((m) => m.code === gradeCode);
-          basePrice = m?.price || 0;
-          gradeName = m?.name || gradeCode;
-        }
-        newSelected.unshift({
-          id,
-          type: typeForm as "rst" | "finished",
-          category: catForm,
-          subCategory: subCatForm,
-          grade: gradeCode,
-          name: `${displayName} (${gradeName})`,
-          quantity: qty,
-          basePrice,
-          detail: "",
-          files: [],
-        });
+        const m = availableFpGrades.find((m) => m.code === gradeCode);
+        basePrice = m?.price || 0;
+        gradeName = m?.name || gradeCode;
       }
+      
+      newSelected.unshift({
+        id,
+        type: typeForm as "rst" | "finished",
+        category: catForm,
+        subCategory: subCatForm,
+        grade: gradeCode,
+        name: `${displayName} (${gradeName})`,
+        quantity: qty,
+        basePrice,
+        detail: detailForm,
+        files: [...filesForm],
+      });
     });
 
     setSelectedGrades(newSelected);
     setActiveGrades({});
+    setDetailForm("");
+    setFilesForm([]);
     setErrors((prev) => ({ ...prev, grades: undefined }));
   };
 
   const handleAddCustom = () => {
+    if (!detailForm.trim()) return;
+    
     const newSelected = [...selectedGrades];
     newSelected.unshift({
       id: `custom-${Date.now()}`,
@@ -167,10 +196,12 @@ export default function DraftContractPage() {
       name: "Produk Custom",
       quantity: 1, // Default quantity for custom
       basePrice: 0,
-      detail: "",
-      files: [],
+      detail: detailForm,
+      files: [...filesForm],
     });
     setSelectedGrades(newSelected);
+    setDetailForm("");
+    setFilesForm([]);
     setErrors((prev) => ({ ...prev, grades: undefined }));
     setTypeForm("");
   };
@@ -179,62 +210,125 @@ export default function DraftContractPage() {
     setSelectedGrades(selectedGrades.filter((g) => g.id !== id));
   };
 
-  const handleItemDetailChange = (id: string, detail: string) => {
-    setSelectedGrades((prev) =>
-      prev.map((g) => (g.id === id ? { ...g, detail } : g))
-    );
-  };
-
-  const handleItemFilesChange = (id: string, newFiles: FileList | null) => {
-    if (!newFiles) return;
-    const filesArray = Array.from(newFiles);
-    setSelectedGrades((prev) =>
-      prev.map((g) => (g.id === id ? { ...g, files: [...g.files, ...filesArray] } : g))
-    );
-  };
-
-  const handleItemRemoveFile = (id: string, fileIndex: number) => {
-    setSelectedGrades((prev) =>
-      prev.map((g) =>
-        g.id === id
-          ? { ...g, files: g.files.filter((_, i) => i !== fileIndex) }
-          : g
-      )
-    );
-  };
-
-  // Submit logic updates to check if detail per item is filled
   const canSubmit =
     location.manager !== null &&
     location.unit !== null &&
-    selectedGrades.length > 0 &&
-    selectedGrades.every((g) => g.detail.trim() !== "");
+    selectedGrades.length > 0;
 
   const handleSubmit = () => {
     const newErrors: typeof errors = {};
     if (!location.manager) newErrors.manager = "Wajib pilih Wilayah";
     if (!location.unit) newErrors.unit = "Wajib pilih Unit/TPK";
     if (selectedGrades.length === 0) newErrors.grades = "Wajib memasukkan minimal satu pesanan";
-    
-    // Check if any items are missing detail
-    const missingDetails = selectedGrades.some((g) => !g.detail.trim());
-    if (missingDetails && selectedGrades.length > 0) {
-      newErrors.grades = "Detail permintaan wajib diisi untuk semua pesanan di daftar";
-    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
     setErrors({});
-    alert("Draft kontrak berhasil ditambahkan!");
+    
+    // Save to localStorage for real-feel prototype
+    const dateStr = new Date().toISOString().split('T')[0];
+    const newId = `CTR-${new Date().getFullYear().toString().slice(-2)}${(new Date().getMonth() + 1).toString().padStart(2, '0')}-${Math.floor(Math.random() * 999).toString().padStart(3, '0')}`;
+    
+    // Determine type & volume summary
+    const hasRST = selectedGrades.some(g => g.type === "rst");
+    const hasFP = selectedGrades.some(g => g.type === "finished");
+    const hasCustom = selectedGrades.some(g => g.type === "custom");
+    
+    let typeLab = "Mixed Product";
+    if (hasRST && !hasFP && !hasCustom) typeLab = "Raw Sawn Timber (RST)";
+    else if (!hasRST && hasFP && !hasCustom) typeLab = "Finished Product";
+    else if (!hasRST && !hasFP && hasCustom) typeLab = "Pesanan Custom";
+    
+    const qtyVol = selectedGrades.reduce((acc, curr) => acc + curr.quantity, 0);
+    const unitVol = hasRST && !hasFP && !hasCustom ? "M³" : hasFP && !hasRST && !hasCustom ? "Pcs" : "Item(s)";
+    
+    const newContract = {
+      id: newId,
+      date: dateStr,
+      type: typeLab,
+      volume: `${qtyVol} ${unitVol}`,
+      location: `${location.manager} - ${location.unit}`,
+      status: "Draft",
+    };
+
+    try {
+      const existingStr = localStorage.getItem("tokoperhutani_contracts");
+      const existingArr = existingStr ? JSON.parse(existingStr) : [];
+      localStorage.setItem("tokoperhutani_contracts", JSON.stringify([newContract, ...existingArr]));
+    } catch (e) {
+      console.error("Error saving to localStorage", e);
+    }
+    
+    router.push("/user/contract");
   };
+
+  const renderDetailAndFileInput = () => (
+    <div className="pt-6 border-t border-gray-100 mt-6 space-y-4">
+      {/* Detail Permintaan Input */}
+      <div>
+        <label className="block text-[11px] font-semibold text-muted-foreground mb-2">
+          Detail Permintaan <span className="text-red-500">*</span>
+        </label>
+        <Textarea
+          value={detailForm}
+          onChange={(e) => setDetailForm(e.target.value)}
+          placeholder="Isikan detail spesifikasi / catatan untuk item ini..."
+          rows={3}
+          className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-[#1B4332] resize-none focus-visible:ring-0 focus-visible:border-[#40916C] shadow-sm transition-all"
+        />
+      </div>
+
+      {/* File Input */}
+      <div>
+        <label className="block text-[11px] font-semibold text-muted-foreground mb-2">
+          Lampiran File
+        </label>
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+          <div className="relative">
+            <input
+              type="file"
+              multiple
+              accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              onChange={handleFormFileChange}
+            />
+            <Button 
+              type="button" 
+              variant="outline" 
+              size="sm"
+              className="bg-white border-dashed border-gray-300 hover:border-[#40916C] hover:text-[#40916C] h-9 pointer-events-none"
+            >
+              <UploadCloud className="w-4 h-4 mr-2 opacity-50" />
+              Pilih File
+            </Button>
+          </div>
+          
+          {/* Form files display */}
+          {filesForm.length > 0 && (
+            <div className="flex flex-wrap gap-2 flex-1">
+              {filesForm.map((file, i) => (
+                <div key={i} className="flex items-center gap-2 bg-[#F8FDF5] border border-[#40916C]/20 rounded-md px-2 py-1">
+                  <FileText className="w-3 h-3 text-[#40916C]/70" />
+                  <span className="text-[10px] font-medium text-[#1B4332] max-w-[100px] truncate">{file.name}</span>
+                  <button type="button" onClick={() => handleFormFileRemove(i)} className="text-muted-foreground hover:text-red-500">
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-[#FBFBFB]">
       <Header location={location} setLocation={setLocation} />
 
-      <main className="max-w-4xl mx-auto px-4 py-8 md:py-12">
+      <main className="max-w-5xl mx-auto px-4 py-8 md:py-12">
         <div className="mb-10">
           <h1 className="text-2xl font-bold text-[#1B4332] mb-1">Form Permohonan Kontrak</h1>
           <p className="text-sm text-muted-foreground">
@@ -280,7 +374,7 @@ export default function DraftContractPage() {
                   )}
                 >
                   <option value="">-- Pilih Wilayah --</option>
-                  {Object.keys(cascadeData["GM KBM IK"]).map((mgr) => (
+                  {Object.keys(cascadeData["GM Wilayah"]).map((mgr) => (
                     <option key={mgr} value={mgr}>{mgr}</option>
                   ))}
                 </select>
@@ -306,7 +400,7 @@ export default function DraftContractPage() {
                 >
                   <option value="">-- Pilih Unit --</option>
                   {location.manager &&
-                    ((cascadeData["GM KBM IK"] as Record<string, string[]>)[location.manager] ?? []).map((unit) => (
+                    ((cascadeData["GM Wilayah"] as Record<string, string[]>)[location.manager] ?? []).map((unit) => (
                       <option key={unit} value={unit}>{unit}</option>
                     ))}
                 </select>
@@ -317,18 +411,12 @@ export default function DraftContractPage() {
           {/* ── 2. Sortimen Selection ── */}
           <div className="bg-white border border-gray-100 rounded-2xl p-8 shadow-sm">
             <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-50">
-              <h2 className="text-sm font-bold text-[#1B4332] uppercase tracking-wide">Pilih Sortimen</h2>
+              <h2 className="text-sm font-bold text-[#1B4332] tracking-wide">Pilih Sortimen</h2>
               <Button
                 variant="ghost"
                 size="sm"
                 type="button"
-                onClick={() => {
-                  setTypeForm("");
-                  setCatForm("");
-                  setSubCatForm("");
-                  setProductNameForm("");
-                  setActiveGrades({});
-                }}
+                onClick={resetFormFields}
                 className="text-muted-foreground hover:text-red-500 hover:bg-red-50 h-8 px-3 rounded-lg text-xs font-semibold disabled:opacity-50"
                 disabled={!typeForm}
               >
@@ -344,8 +432,8 @@ export default function DraftContractPage() {
                   value={typeForm}
                   disabled={!location.unit}
                   onChange={(e) => {
+                    resetFormFields();
                     setTypeForm(e.target.value as any);
-                    setCatForm(""); setSubCatForm(""); setProductNameForm(""); setActiveGrades({});
                   }}
                   className={cn(
                     "w-full rounded-xl border border-gray-100 bg-white px-4 py-3 text-sm text-[#1B4332] shadow-sm hover:border-[#40916C] focus:border-[#40916C] focus:outline-none appearance-none transition-all cursor-pointer",
@@ -467,14 +555,17 @@ export default function DraftContractPage() {
                       );
                     })}
                   </div>
+                  
+                  {renderDetailAndFileInput()}
+
                   <div className="flex justify-end pt-2">
                     <Button
                       type="button"
-                      disabled={Object.values(activeGrades).filter((v) => Number(v) > 0).length === 0}
+                      disabled={Object.values(activeGrades).filter((v) => Number(v) > 0).length === 0 || !detailForm.trim()}
                       onClick={handleAddGrade}
-                      className="rounded-xl bg-[#40916C] hover:bg-[#2D6A4F] text-white font-semibold h-[44px] px-8 shadow-sm transition-all"
+                      className="rounded-xl bg-[#40916C] hover:bg-[#2D6A4F] text-white font-semibold h-[44px] px-8 shadow-sm transition-all disabled:opacity-50"
                     >
-                      + Masukkan ke Daftar Pesanan
+                      Masukkan ke Daftar Pesanan
                     </Button>
                   </div>
                 </div>
@@ -484,14 +575,18 @@ export default function DraftContractPage() {
               {typeForm === "custom" && (
                 <div className="col-span-1 md:col-span-2 pt-4 border-t border-gray-100 mt-2">
                   <div className="rounded-xl p-5 border border-amber-100 text-amber-800 text-sm mb-4">
-                    <p className="font-semibold mb-1">Permintaan Khusus (Custom)</p>
-                    <p className="text-amber-700/80">Silakan tambahkan pesanan custom ke daftar di bawah, lalu Anda dapat mengisi spesifikasi detail dan lampiran untuk tim perhutani mereview.</p>
+                    <p className="font-semibold mb-1">Permintaan Khusus</p>
+                    <p className="text-amber-700/80">Silakan isi detail spesifikasi dan lampirkan dokumen yang diperlukan agar pesanan custom Anda dapat direview oleh tim Perhutani.</p>
                   </div>
-                  <div className="flex justify-start">
+
+                  {renderDetailAndFileInput()}
+
+                  <div className="flex justify-start mt-6">
                     <Button
                       type="button"
+                      disabled={!detailForm.trim()}
                       onClick={handleAddCustom}
-                      className="rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-semibold h-[44px] px-8 shadow-sm transition-all"
+                      className="rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-semibold h-[44px] px-8 shadow-sm transition-all disabled:opacity-50"
                     >
                       Masukkan Pesanan Custom
                     </Button>
@@ -500,7 +595,7 @@ export default function DraftContractPage() {
               )}
             </div>
 
-            {/* Selected grades list (Cart) — now with detail & file inputs per item */}
+            {/* Selected grades list (Cart) — now read-only display for details/files */}
             {selectedGrades.length > 0 && (
               <div className="space-y-6 pt-8 mt-8 border-t border-gray-50">
                 <div className="flex items-center justify-between mb-2">
@@ -513,7 +608,7 @@ export default function DraftContractPage() {
                   {selectedGrades.map((g) => (
                     <div key={g.id} className="flex flex-col gap-4 p-5 bg-[#FBFDFB] border border-gray-100 rounded-xl shadow-sm">
                       {/* Item Header */}
-                      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-gray-100 pb-4">
+                      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-gray-100 pb-3">
                         <div>
                           {g.type === "custom" ? (
                             <p className="text-sm font-bold text-amber-700">{g.name}</p>
@@ -541,74 +636,32 @@ export default function DraftContractPage() {
                         </div>
                       </div>
 
-                      {/* Item Detail Input */}
-                      <div>
-                        <div className="flex items-center justify-between mb-2">
-                          <label className="block text-[11px] font-semibold text-muted-foreground uppercase">
-                            Detail Permintaan <span className="text-red-500">*</span>
-                          </label>
-                          {errors.grades && !g.detail.trim() && (
-                            <span className="text-[10px] font-semibold text-red-500">Wajib Diisi</span>
-                          )}
-                        </div>
-                        <Textarea
-                          value={g.detail}
-                          onChange={(e) => handleItemDetailChange(g.id, e.target.value)}
-                          placeholder="Detail spesifikasi / ukuran / catatan khusus untuk produk ini..."
-                          rows={3}
-                          className={cn(
-                            "w-full rounded-xl border bg-white px-3 py-2 text-sm text-[#1B4332] resize-none focus-visible:ring-0 focus-visible:border-[#40916C] shadow-sm transition-all",
-                            errors.grades && !g.detail.trim() ? "border-red-400" : "border-gray-100"
-                          )}
-                        />
+                      {/* Display Detail */}
+                      <div className="pt-1">
+                        <label className="block text-[10px] font-semibold text-muted-foreground mb-1">
+                          Detail Permintaan
+                        </label>
+                        <p className="text-sm text-[#1B4332] whitespace-pre-line bg-white border border-gray-100 rounded-lg p-3">
+                          {g.detail}
+                        </p>
                       </div>
 
-                      {/* Item File Input */}
-                      <div className="pt-2">
-                        <label className="block text-[11px] font-semibold text-muted-foreground uppercase mb-2">
-                          Lampiran (Opsional)
-                        </label>
-                        
-                        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-                          <div className="relative">
-                            <input
-                              type="file"
-                              multiple
-                              accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
-                              id={`file-upload-${g.id}`}
-                              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                              onChange={(e) => {
-                                handleItemFilesChange(g.id, e.target.files);
-                                e.target.value = "";
-                              }}
-                            />
-                            <Button 
-                              type="button" 
-                              variant="outline" 
-                              size="sm"
-                              className="bg-white border-dashed border-gray-300 hover:border-[#40916C] hover:text-[#40916C] h-9 pointer-events-none"
-                            >
-                              <UploadCloud className="w-4 h-4 mr-2 opacity-50" />
-                              Tambah File
-                            </Button>
+                      {/* Display Files */}
+                      {g.files.length > 0 && (
+                        <div className="pt-1">
+                          <label className="block text-[10px] font-semibold text-muted-foreground uppercase mb-2">
+                            Lampiran
+                          </label>
+                          <div className="flex flex-wrap gap-2">
+                            {g.files.map((file, i) => (
+                              <div key={i} className="flex items-center gap-2 bg-[#F8FDF5] border border-[#40916C]/20 rounded-md px-2 py-1.5">
+                                <FileText className="w-3 h-3 text-[#40916C]/70" />
+                                <span className="text-[11px] font-medium text-[#1B4332] truncate max-w-[150px]">{file.name}</span>
+                              </div>
+                            ))}
                           </div>
-                          
-                          {/* File list specifically for this item */}
-                          {g.files.length > 0 && (
-                            <div className="flex flex-wrap gap-2 flex-1">
-                              {g.files.map((file, i) => (
-                                <div key={i} className="flex items-center gap-2 bg-[#F8FDF5] border border-[#40916C]/20 rounded-md px-2 py-1">
-                                  <FileText className="w-3 h-3 text-[#40916C]/70" />
-                                  <span className="text-[10px] font-medium text-[#1B4332] max-w-[100px] truncate">{file.name}</span>
-                                  <button type="button" onClick={() => handleItemRemoveFile(g.id, i)} className="text-muted-foreground hover:text-red-500">
-                                    <X className="w-3 h-3" />
-                                  </button>
-                                </div>
-                              ))}
-                            </div>
-                          )}
                         </div>
-                      </div>
+                      )}
                       
                     </div>
                   ))}
