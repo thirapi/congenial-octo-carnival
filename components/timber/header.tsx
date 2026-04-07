@@ -34,6 +34,7 @@ import {
   MapPin,
   FileText,
   LogOut,
+  ShoppingBag,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -69,23 +70,15 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
   const totalRSTQuantity = rstItems.length;
   const totalCartItems = totalFinishedQuantity + totalRSTQuantity;
 
-  const wilayahOptions = ["GM Wilayah"];
-  const managerOptions = location.wilayah
-    ? Object.keys(cascadeData[location.wilayah as keyof typeof cascadeData])
-    : [];
-  const unitOptions =
-    location.wilayah && location.manager
-      ? (cascadeData[location.wilayah as keyof typeof cascadeData] as Record<string, string[]>)[
+  const managerOptions = Object.keys(cascadeData["GM Wilayah"]);
+  const unitOptions = location.manager
+      ? (cascadeData["GM Wilayah"] as Record<string, string[]>)[
           location.manager
         ] ?? []
       : [];
 
-  const handleWilayahChange = (value: string) => {
-    setLocation({ wilayah: value, manager: null, unit: null });
-  };
-
   const handleManagerChange = (value: string) => {
-    setLocation({ ...location, manager: value, unit: null });
+    setLocation({ ...location, wilayah: "GM Wilayah", manager: value, unit: null });
   };
 
   const handleUnitChange = (value: string) => {
@@ -102,7 +95,7 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isHeroTransparent = (pathname === "/" || pathname === "/contract") && !isScrolled;
+  const isHeroTransparent = (pathname === "/contract") && !isScrolled;
 
   return (
     <div className={cn("flex flex-col w-full fixed top-0 z-50 transition-colors duration-300", isHeroTransparent ? "bg-transparent" : "bg-black/95 shadow-md shadow-black/10")}>
@@ -353,6 +346,10 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
                    <DropdownMenuContent align="end" className="w-56 mt-2 border-0 shadow-xl rounded-xl bg-white text-[#1B4332]">
                      <DropdownMenuLabel className="font-bold">Akun Saya</DropdownMenuLabel>
                      <DropdownMenuSeparator className="bg-gray-100" />
+                     <DropdownMenuItem className="font-medium py-2.5 focus:bg-gray-50 focus:text-[#40916C]">
+                       <ShoppingBag className="mr-2 h-4 w-4 opacity-70" />
+                       Pesanan Saya
+                     </DropdownMenuItem>
                      <DropdownMenuItem onClick={() => router.push("/user/contract")} className="cursor-pointer font-medium py-2.5 focus:bg-gray-50 focus:text-[#40916C]">
                        <FileText className="mr-2 h-4 w-4 opacity-70" />
                        Kontrak Saya
@@ -380,38 +377,19 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
         )}
       >
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-3 gap-4">
-            {/* Wilayah Dropdown */}
-            <div>
-              <label className="block text-xs font-semibold uppercase text-muted-foreground mb-2">
-                Pilih Wilayah
-              </label>
-              <select
-                value={location.wilayah || ""}
-                onChange={(e) => handleWilayahChange(e.target.value)}
-                className="w-full rounded border border-border bg-white px-3 py-2 text-sm text-foreground hover:border-primary focus:border-primary focus:outline-none"
-              >
-                <option value="">-- Pilih Wilayah --</option>
-                {wilayahOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div className="grid grid-cols-2 gap-4">
 
             {/* Manager Dropdown */}
             <div>
-              <label className="block text-xs font-semibold uppercase text-muted-foreground mb-2">
-                Pilih Manager / Kota
+              <label className="block text-xs font-semibold text-muted-foreground mb-2">
+                Pilih Wilayah / Kota
               </label>
               <select
                 value={location.manager || ""}
                 onChange={(e) => handleManagerChange(e.target.value)}
-                disabled={!location.wilayah}
-                className="w-full rounded border border-border bg-white px-3 py-2 text-sm text-foreground disabled:bg-muted disabled:text-muted-foreground hover:border-primary focus:border-primary focus:outline-none disabled:cursor-not-allowed"
+                className="w-full rounded border border-border bg-white px-3 py-2 text-sm text-foreground hover:border-primary focus:border-primary focus:outline-none"
               >
-                <option value="">-- Pilih Manager --</option>
+                <option value="">-- Pilih Wilayah --</option>
                 {managerOptions.map((option) => (
                   <option key={option} value={option}>
                     {option}
@@ -422,7 +400,7 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
 
             {/* Unit Dropdown */}
             <div>
-              <label className="block text-xs font-semibold uppercase text-muted-foreground mb-2">
+              <label className="block text-xs font-semibold text-muted-foreground mb-2">
                 Pilih Unit / Lokasi
               </label>
               <select
@@ -444,24 +422,24 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
           {/* Selected Location Summary */}
           {location.unit && (
             <div className="mt-6 grid grid-cols-3 gap-4 bg-muted/30 rounded p-4 border border-border transition-all duration-300">
-              <div>
+              {/* <div>
                 <p className="text-xs font-semibold uppercase text-muted-foreground">
                   Wilayah
                 </p>
                 <p className="mt-1 text-sm font-semibold text-foreground">
                   {location.wilayah}
                 </p>
-              </div>
+              </div> */}
               <div>
-                <p className="text-xs font-semibold uppercase text-muted-foreground">
-                  Manager
+                <p className="text-xs font-semibold text-muted-foreground">
+                  Wilayah
                 </p>
                 <p className="mt-1 text-sm font-semibold text-foreground">
                   {location.manager}
                 </p>
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase text-muted-foreground">
+                <p className="text-xs font-semibold text-muted-foreground">
                   Unit / Lokasi
                 </p>
                 <p className="mt-1 text-sm font-semibold text-foreground">

@@ -86,7 +86,11 @@ export function RSTTable({
 
   if (!location.unit) {
     return (
-      <div className="flex flex-col items-center justify-center py-32 bg-muted/10 rounded-xl border-2 border-dashed border-border">
+      <div className="relative flex flex-col items-center justify-center py-32 bg-muted/10 rounded-xl border-2 border-dashed border-border">
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-10"
+          style={{ backgroundImage: 'url("/rst-background.jpeg")' }}
+        />
         <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -104,7 +108,7 @@ export function RSTTable({
           </svg>
         </div>
         <h3 className="text-xl font-bold text-foreground mb-2">
-          Inventaris Unit Belum Dipilih
+          Lokasi Unit Belum Dipilih
         </h3>
         <p className="text-muted-foreground text-center max-w-md">
           Silakan pilih Unit / Lokasi terlebih dahulu untuk melihat daftar log

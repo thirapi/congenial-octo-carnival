@@ -323,20 +323,20 @@ export default function ContractPage() {
 
         {/* Hero Section with Video Background */}
         <section
-          className="relative min-h-[85vh] flex items-center justify-center pt-44 pb-24 px-4 overflow-hidden"
+          className="relative h-screen flex items-center justify-center pt-44 pb-24 px-4 overflow-hidden"
           style={{ fontFamily: "'Poppins', sans-serif" }}
         >
-          {/* Video Background Container */}
-          <div className="absolute inset-0 z-0">
+          {/* Video Background Container - Strictly Pinned to Top */}
+          <div className="absolute top-0 left-0 w-full h-full z-0 overflow-hidden">
             <video
               autoPlay
               loop
               muted
               playsInline
-              className="w-full h-full object-cover scale-105"
+              className="w-full h-full object-cover scale-105 transform origin-center"
             >
               <source
-                src="/Indonesian_Forest_Ranger_Documentary_Film.mp4"
+                src="/hero.mp4"
                 type="video/mp4"
               />
             </video>
@@ -512,7 +512,8 @@ export default function ContractPage() {
         </section>
         )}
 
-        {/* FAQ Section */}
+        {/* FAQ Section - Temporarily Hidden */}
+        {false && (
         <section className="py-24 px-4 bg-[#F8FDF5] border-t border-[#E8F3E1]">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-16 space-y-4">
@@ -584,6 +585,7 @@ export default function ContractPage() {
             </div>
           </div>
         </section>
+        )}
       </div>
     );
 }

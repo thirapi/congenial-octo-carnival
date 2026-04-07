@@ -17,6 +17,7 @@ export const metadata: Metadata = {
 
 import { CartProvider } from "@/lib/cart-store";
 import { Toaster } from "@/components/ui/sonner";
+import { Footer } from "@/components/timber/footer";
 
 export default function RootLayout({
   children,
@@ -27,7 +28,10 @@ export default function RootLayout({
     <html lang="en">
       <body className="font-sans antialiased">
         <CartProvider>
-          {children}
+          <div className="flex flex-col min-h-screen">
+            <div className="flex-grow flex flex-col relative">{children}</div>
+            <Footer />
+          </div>
           <Toaster />
         </CartProvider>
       </body>
