@@ -328,7 +328,7 @@ export default function DraftContractPage() {
     <div className="min-h-screen bg-[#FBFBFB]">
       <Header location={location} setLocation={setLocation} />
 
-      <main className="max-w-5xl mx-auto px-4 py-8 md:py-12">
+      <main className="max-w-5xl mx-auto px-4 pt-[140px] pb-12">
         <div className="mb-10">
           <h1 className="text-2xl font-bold text-[#1B4332] mb-1">Form Permohonan Kontrak</h1>
           <p className="text-sm text-muted-foreground">
