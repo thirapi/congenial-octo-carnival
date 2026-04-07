@@ -28,14 +28,14 @@ import { Button } from "@/components/ui/button";
 
 const cascadeData = {
   "GM KBM IK": {
-    "Manager IK Jawa Timur": [
+    "Wilayah Jawa Timur": [
       "PIK Gresik",
       "PIK Saradan",
       "PIK Ngawi",
       "PIK Jatirogo",
       "PPL",
     ],
-    "Manager IK Jawa Tengah": ["PIK Cepu", "PIK Randublatung"],
+    "Wilayah Jawa Tengah": ["PIK Cepu", "PIK Randublatung"],
   },
 };
 
@@ -64,9 +64,9 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
     : [];
   const unitOptions =
     location.wilayah && location.manager
-      ? cascadeData[location.wilayah as keyof typeof cascadeData][
-          location.manager as keyof (typeof cascadeData)["GM KBM IK"]
-        ]
+      ? (cascadeData[location.wilayah as keyof typeof cascadeData] as Record<string, string[]>)[
+          location.manager
+        ] ?? []
       : [];
 
   const handleWilayahChange = (value: string) => {
