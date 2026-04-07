@@ -108,12 +108,12 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
     <div className={cn("flex flex-col w-full fixed top-0 z-50 transition-colors duration-300", isHeroTransparent ? "bg-transparent" : "bg-black/95 shadow-md shadow-black/10")}>
       <header className="w-full">
         <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex-shrink-0 flex items-center relative z-10 w-40">
-            <a href="/" className="hover:opacity-80 transition-opacity">
+          <div className="flex-shrink-0 flex items-center relative z-10 w-[160px]">
+            <a href="/" className="hover:opacity-80 transition-opacity block w-full">
               <img
                 src="/image.png"
                 alt="Perhutani Logo"
-                className="h-10 w-auto object-contain brightness-0 invert" 
+                className="w-[110px] h-auto object-contain brightness-0 invert" 
               />
             </a>
           </div>
