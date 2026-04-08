@@ -13,14 +13,27 @@ export function FinishedProductsTab({ location }: FinishedProductsTabProps) {
   const [filters, setFilters] = useState({
     woodType: [] as string[],
     grade: [] as string[],
+    sertifikat: [] as string[],
   });
 
-  const filteredProducts = useMemo(() => {
-    let data = finishedProducts;
+  const [localLocation, setLocalLocation] = useState({
+    wilayah: "" as string,
+    unit: "" as string,
+  });
 
-    // Optional location filter - only if unit is selected
-    if (location.unit) {
-      data = data.filter((p) => p.unit === location.unit);
+  const [sortBy, setSortBy] = useState("relevance");
+
+  const filteredProducts = useMemo(() => {
+    let data = [...finishedProducts];
+
+    // Global location filter from header
+    const activeWilayah = localLocation.wilayah || location.manager;
+    const activeUnit = localLocation.unit || location.unit;
+
+    if (activeUnit) {
+      data = data.filter((p) => p.unit === activeUnit);
+    } else if (activeWilayah) {
+      data = data.filter((p) => p.wilayah === activeWilayah);
     }
 
     if (filters.woodType.length > 0) {
@@ -31,8 +44,27 @@ export function FinishedProductsTab({ location }: FinishedProductsTabProps) {
       data = data.filter((p) => filters.grade.includes(p.grade));
     }
 
+    if (filters.sertifikat.length > 0) {
+      data = data.filter((p) => filters.sertifikat.includes(p.sertifikat));
+    }
+
+    // Sorting
+    if (sortBy === "price-low") {
+      data.sort((a, b) => a.price - b.price);
+    } else if (sortBy === "price-high") {
+      data.sort((a, b) => b.price - a.price);
+    } else if (sortBy === "stock-high") {
+      data.sort((a, b) => b.stock - a.stock);
+    }
+
     return data;
-  }, [location.unit, filters]);
+  }, [location, filters, localLocation, sortBy]);
+
+  const unitOptions = localLocation.wilayah === "Wilayah Jawa Timur" 
+    ? ["PIK Gresik", "PIK Saradan", "PIK Ngawi", "PIK Jatirogo"]
+    : localLocation.wilayah === "Wilayah Jawa Tengah"
+    ? ["PIK Cepu", "PIK Randublatung"]
+    : [];
 
   return (
     <div className="grid grid-cols-4 gap-6">
@@ -43,23 +75,41 @@ export function FinishedProductsTab({ location }: FinishedProductsTabProps) {
       />
 
       <div className="col-span-3">
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-lg font-bold text-foreground">
-            Semua Produk Jadi ({filteredProducts.length})
-            {location.unit && (
-              <span className="text-primary ml-2 uppercase tracking-tight text-sm font-black">
-                DI {location.unit}
-              </span>
-            )}
-          </h2>
-          <div className="flex gap-2">
-            <select className="rounded border border-border bg-white px-3 py-2 text-sm text-foreground">
-              <option>Urutkan: Relevansi</option>
-              <option>Harga: Terendah ke Tertinggi</option>
-              <option>Harga: Tertinggi ke Terendah</option>
-              <option>Stok: Tertinggi ke Terendah</option>
-            </select>
-          </div>
+        <div className="mb-6 flex flex-wrap items-center gap-2">
+          <select 
+            value={localLocation.wilayah}
+            onChange={(e) => setLocalLocation({ wilayah: e.target.value, unit: "" })}
+            className="rounded-lg border border-border bg-white px-3 py-1.5 text-xs font-semibold text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 min-w-[140px] hover:border-primary/50 transition-colors"
+          >
+            <option value="">Semua Wilayah</option>
+            <option value="Wilayah Jawa Timur">Jawa Timur</option>
+            <option value="Wilayah Jawa Tengah">Jawa Tengah</option>
+          </select>
+
+          <select 
+            value={localLocation.unit}
+            onChange={(e) => setLocalLocation({ ...localLocation, unit: e.target.value })}
+            disabled={!localLocation.wilayah}
+            className="rounded-lg border border-border bg-white px-3 py-1.5 text-xs font-semibold text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-50 min-w-[140px] hover:border-primary/50 transition-colors"
+          >
+            <option value="">Pilih Unit</option>
+            {unitOptions.map(unit => (
+              <option key={unit} value={unit}>{unit}</option>
+            ))}
+          </select>
+
+          <div className="flex-1" />
+
+          <select 
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="rounded-lg border border-border bg-white px-3 py-1.5 text-xs font-semibold text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 min-w-[160px] hover:border-primary/50 transition-colors"
+          >
+            <option value="relevance">Urutkan: Relevansi</option>
+            <option value="price-low">Harga: Terendah ke Tertinggi</option>
+            <option value="price-high">Harga: Tertinggi ke Terendah</option>
+            <option value="stock-high">Stok: Tertinggi ke Terendah</option>
+          </select>
         </div>
 
         {filteredProducts.length > 0 ? (
@@ -86,7 +136,7 @@ export function FinishedProductsTab({ location }: FinishedProductsTabProps) {
                 />
               </svg>
             </div>
-            <p className="text-gray-900 font-bold text-lg">
+            <p className="text-gray-900 font-semibold text-lg">
               Tidak ada produk ditemukan
             </p>
             <p className="text-sm text-gray-400 mt-1 max-w-[240px] text-center">

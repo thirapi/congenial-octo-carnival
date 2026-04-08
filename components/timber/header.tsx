@@ -98,7 +98,7 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
   const isHeroTransparent = (pathname === "/contract") && !isScrolled;
 
   return (
-    <div className={cn("flex flex-col w-full fixed top-0 z-50 transition-colors duration-300", isHeroTransparent ? "bg-transparent" : "bg-black/95 shadow-md shadow-black/10")}>
+    <div className={cn("flex flex-col w-full fixed top-0 z-50 transition-colors duration-300", isHeroTransparent ? "bg-transparent" : "bg-black shadow-md shadow-black/10")}>
       <header className="w-full">
         <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex-shrink-0 flex items-center relative z-10 w-[160px]">
@@ -141,9 +141,9 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
             {/* Bottom Row */}
             <div className="flex items-center justify-between pt-3">
               <div className="flex items-center gap-8">
-                <a href="/" className={cn("text-[15px] font-bold text-white hover:opacity-80 transition-all tracking-wide", pathname === "/" && "text-[#84cc16]")}>Produk Jadi</a>
-                <a href="/rst" className={cn("text-[15px] font-bold text-white hover:opacity-80 transition-all tracking-wide", pathname === "/rst" && "text-[#84cc16]")}>Kayu Gergajian Mentah (RST)</a>
-                <a href="/contract" className={cn("text-[15px] font-bold text-white hover:opacity-80 transition-all tracking-wide", pathname.includes("/contract") && "text-[#84cc16]")}>Pesanan Korporat</a>
+                <a href="/" className={cn("text-base font-semibold text-white hover:opacity-80 transition-all", pathname === "/" && "text-[#84cc16]")}>Produk Jadi</a>
+                <a href="/rst" className={cn("text-base font-semibold text-white hover:opacity-80 transition-all", pathname === "/rst" && "text-[#84cc16]")}>Kayu Gergajian Mentah (RST)</a>
+                <a href="/contract" className={cn("text-base font-semibold text-white hover:opacity-80 transition-all", pathname.includes("/contract") && "text-[#84cc16]")}>Pesanan Korporat</a>
               </div>
               
               <div className="flex items-center gap-6 pr-1">
@@ -164,7 +164,7 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
                    </DialogTrigger>
                    <DialogContent className="sm:max-w-[600px] p-0 overflow-hidden border-none shadow-2xl z-[100]">
                      <DialogHeader className="p-6 bg-[#F8FDF5] border-b">
-                       <DialogTitle className="text-xl font-black text-[#1B4332] flex items-center gap-3">
+                       <DialogTitle className="text-xl font-bold text-[#1B4332] flex items-center gap-3">
                          <div className="p-2 bg-[#1B4332]/5 rounded-lg w-9 h-9 flex items-center justify-center">
                            <ShoppingCart className="w-5 h-5 text-[#1B4332]" strokeWidth={2.5} />
                          </div>
@@ -177,11 +177,11 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
                          <TabsList className="grid w-full grid-cols-2 h-11 p-1 bg-muted/50 rounded-xl">
                            <TabsTrigger
                              value="finished"
-                             className="rounded-lg font-bold"
+                             className="rounded-lg font-semibold"
                            >
                              Finished Product ({totalFinishedQuantity})
                            </TabsTrigger>
-                           <TabsTrigger value="rst" className="rounded-lg font-bold">
+                           <TabsTrigger value="rst" className="rounded-lg font-semibold">
                              RST ({totalRSTQuantity})
                            </TabsTrigger>
                          </TabsList>
@@ -195,7 +195,7 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
                            {finishedItems.length === 0 ? (
                              <div className="flex flex-col items-center justify-center py-20 text-muted-foreground/40">
                                <Package className="w-16 h-16 mb-4 opacity-10" />
-                               <p className="text-sm font-bold">
+                               <p className="text-sm font-semibold">
                                  Belum ada produk di keranjang
                                </p>
                              </div>
@@ -212,7 +212,7 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
                                      alt=""
                                    />
                                    <div className="flex-1 overflow-hidden">
-                                     <p className="text-sm font-bold text-[#1B4332] truncate">
+                                     <p className="text-sm font-semibold text-[#1B4332] truncate">
                                        {item.product.name}
                                      </p>
                                      <p className="text-xs text-muted-foreground font-medium">
@@ -237,10 +237,10 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
                          {finishedItems.length > 0 && (
                            <div className="p-6 bg-[#F8FDF5] border-t border-[#E8F3E1] space-y-4">
                              <div className="flex justify-between items-center">
-                               <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">
+                               <span className="text-xs font-semibold text-muted-foreground">
                                  Total Pembayaran
                                </span>
-                               <span className="text-2xl font-black text-[#1B4332]">
+                               <span className="text-2xl font-bold text-[#1B4332]">
                                  Rp{" "}
                                  {finishedItems
                                    .reduce(
@@ -253,7 +253,7 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
                              </div>
                              <Button
                                onClick={() => router.push("/checkout?type=finished")}
-                               className="w-full bg-[#1B4332] hover:bg-[#2D6A4F] text-white h-12 rounded-xl font-bold shadow-lg shadow-green-900/20"
+                               className="w-full bg-[#1B4332] hover:bg-[#2D6A4F] text-white h-12 rounded-xl font-semibold shadow-lg shadow-green-900/20"
                              >
                                Lanjutkan Checkout
                              </Button>
@@ -269,7 +269,7 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
                            {rstItems.length === 0 ? (
                              <div className="flex flex-col items-center justify-center py-20 text-muted-foreground/40">
                                <Logs className="w-16 h-16 mb-4 opacity-10" />
-                               <p className="text-sm font-bold">
+                               <p className="text-sm font-semibold">
                                  Belum ada RST dipilih
                                </p>
                              </div>
@@ -283,7 +283,7 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
                                    <div className="flex-1 min-w-0">
                                      <div className="flex items-center gap-2 mb-1">
                                        <div className="w-1.5 h-1.5 rounded-full bg-[#1B4332]" />
-                                       <p className="text-sm font-bold text-[#1B4332] truncate">
+                                       <p className="text-sm font-semibold text-[#1B4332] truncate">
                                          {item.noKapling}
                                        </p>
                                      </div>
@@ -292,7 +292,7 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
                                      </p>
                                    </div>
                                    <div className="flex items-center gap-4">
-                                     <span className="text-xs font-bold text-[#1B4332]">
+                                     <span className="text-xs font-semibold text-[#1B4332]">
                                        Rp {item.hargaAkhir.toLocaleString()}
                                      </span>
                                      <button
@@ -311,10 +311,10 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
                          {rstItems.length > 0 && (
                            <div className="p-6 bg-[#F8FDF5] border-t border-[#E8F3E1] space-y-4">
                              <div className="flex justify-between items-center">
-                               <span className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">
+                               <span className="text-xs font-semibold text-muted-foreground">
                                  Estimasi Harga RST
                                </span>
-                               <span className="text-2xl font-black text-[#1B4332]">
+                               <span className="text-2xl font-bold text-[#1B4332]">
                                  Rp{" "}
                                  {rstItems
                                    .reduce(

@@ -80,10 +80,10 @@ export const RST_PRODUCT_TYPES_ARRAY: RSTProductType[] = [
     'Afval kayu'
 ]
 
-export type FinishedCategory = 'Home Decore' | 'Home Construction'
+export type FinishedCategory = 'Home Decor' | 'Home Construction'
 
 export const FINISHED_CATEGORIES_ARRAY: FinishedCategory[] = [
-    'Home Decore',
+    'Home Decor',
     'Home Construction'
 ]
 
@@ -99,6 +99,8 @@ export interface FinishedProduct {
     grade: 'A' | 'B' | 'C'
     image: string
     unit: string
+    wilayah: string
+    sertifikat: string
 }
 
 export const rstData: RSTProduct[] = [
@@ -578,7 +580,7 @@ export const finishedProducts: FinishedProduct[] = [
     {
         id: 1,
         name: 'Meja Makan Jati Minimalis',
-        category: 'Home Decore',
+        category: 'Home Decor',
         subCategory: 'Meja',
         woodType: 'Jati',
         dimensions: '200x100x75cm',
@@ -587,6 +589,8 @@ export const finishedProducts: FinishedProduct[] = [
         grade: 'A',
         image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop',
         unit: 'PIK Gresik',
+        wilayah: 'Wilayah Jawa Timur',
+        sertifikat: 'FSC-PURE',
     },
     {
         id: 2,
@@ -600,11 +604,13 @@ export const finishedProducts: FinishedProduct[] = [
         grade: 'B',
         image: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=800&auto=format&fit=crop',
         unit: 'PIK Gresik',
+        wilayah: 'Wilayah Jawa Timur',
+        sertifikat: 'SVLK',
     },
     {
         id: 3,
         name: 'Kursi Teras Jati Retro',
-        category: 'Home Decore',
+        category: 'Home Decor',
         subCategory: 'Kursi',
         woodType: 'Jati',
         dimensions: '55x60x85cm',
@@ -613,6 +619,8 @@ export const finishedProducts: FinishedProduct[] = [
         grade: 'A',
         image: 'https://images.unsplash.com/photo-1592078615290-033ee584e267?q=80&w=800&auto=format&fit=crop',
         unit: 'PIK Saradan',
+        wilayah: 'Wilayah Jawa Timur',
+        sertifikat: 'FSC-MIX',
     },
     {
         id: 4,
@@ -626,11 +634,13 @@ export const finishedProducts: FinishedProduct[] = [
         grade: 'C',
         image: 'https://images.unsplash.com/photo-1510074377623-8cf13fb86c08?q=80&w=800&auto=format&fit=crop',
         unit: 'PIK Saradan',
+        wilayah: 'Wilayah Jawa Timur',
+        sertifikat: 'SVLK',
     },
     {
         id: 5,
         name: 'Almari Pakaian 3 Pintu',
-        category: 'Home Decore',
+        category: 'Home Decor',
         subCategory: 'Almari',
         woodType: 'Jati',
         dimensions: '150x60x200cm',
@@ -639,6 +649,8 @@ export const finishedProducts: FinishedProduct[] = [
         grade: 'A',
         image: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?q=80&w=800&auto=format&fit=crop',
         unit: 'PIK Ngawi',
+        wilayah: 'Wilayah Jawa Timur',
+        sertifikat: 'FSC-PURE',
     },
     {
         id: 6,
@@ -652,11 +664,13 @@ export const finishedProducts: FinishedProduct[] = [
         grade: 'B',
         image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop',
         unit: 'PIK Ngawi',
+        wilayah: 'Wilayah Jawa Timur',
+        sertifikat: 'SVLK',
     },
     {
         id: 7,
         name: 'Tempat Tidur King Size',
-        category: 'Home Decore',
+        category: 'Home Decor',
         subCategory: 'Tempat Tidur',
         woodType: 'Jati',
         dimensions: '180x200cm',
@@ -665,6 +679,8 @@ export const finishedProducts: FinishedProduct[] = [
         grade: 'A',
         image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop',
         unit: 'PIK Jatirogo',
+        wilayah: 'Wilayah Jawa Timur',
+        sertifikat: 'FSC-MIX',
     },
     {
         id: 8,
@@ -678,12 +694,14 @@ export const finishedProducts: FinishedProduct[] = [
         grade: 'C',
         image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop',
         unit: 'PIK Jatirogo',
+        wilayah: 'Wilayah Jawa Timur',
+        sertifikat: 'SVLK',
     },
-    // ---- ADDED MISSING PERMUTATIONS: RIMBA - HOME DECORE ----
+    // ---- ADDED MISSING PERMUTATIONS: RIMBA - HOME DECOR ----
     {
         id: 9,
         name: 'Meja Makan Rimba Natural',
-        category: 'Home Decore',
+        category: 'Home Decor',
         subCategory: 'Meja',
         woodType: 'Rimba',
         dimensions: '200x100x75cm',
@@ -691,12 +709,14 @@ export const finishedProducts: FinishedProduct[] = [
         stock: 25,
         grade: 'A',
         image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop',
-        unit: 'PIK Gresik',
+        unit: 'PIK Cepu',
+        wilayah: 'Wilayah Jawa Tengah',
+        sertifikat: 'SVLK',
     },
     {
         id: 10,
         name: 'Kursi Teras Rimba Minimalis',
-        category: 'Home Decore',
+        category: 'Home Decor',
         subCategory: 'Kursi',
         woodType: 'Rimba',
         dimensions: '55x60x85cm',
@@ -704,12 +724,14 @@ export const finishedProducts: FinishedProduct[] = [
         stock: 80,
         grade: 'B',
         image: 'https://images.unsplash.com/photo-1592078615290-033ee584e267?q=80&w=800&auto=format&fit=crop',
-        unit: 'PIK Saradan',
+        unit: 'PIK Cepu',
+        wilayah: 'Wilayah Jawa Tengah',
+        sertifikat: 'SVLK',
     },
     {
         id: 11,
         name: 'Almari Pakaian 2 Pintu Rimba',
-        category: 'Home Decore',
+        category: 'Home Decor',
         subCategory: 'Almari',
         woodType: 'Rimba',
         dimensions: '100x60x200cm',
@@ -717,12 +739,14 @@ export const finishedProducts: FinishedProduct[] = [
         stock: 15,
         grade: 'A',
         image: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?q=80&w=800&auto=format&fit=crop',
-        unit: 'PIK Ngawi',
+        unit: 'PIK Randublatung',
+        wilayah: 'Wilayah Jawa Tengah',
+        sertifikat: 'SVLK',
     },
     {
         id: 12,
         name: 'Tempat Tidur Queen Size Rimba',
-        category: 'Home Decore',
+        category: 'Home Decor',
         subCategory: 'Tempat Tidur',
         woodType: 'Rimba',
         dimensions: '160x200cm',
@@ -730,7 +754,9 @@ export const finishedProducts: FinishedProduct[] = [
         stock: 20,
         grade: 'A',
         image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop',
-        unit: 'PIK Jatirogo',
+        unit: 'PIK Randublatung',
+        wilayah: 'Wilayah Jawa Tengah',
+        sertifikat: 'SVLK',
     },
     // ---- ADDED MISSING PERMUTATIONS: JATI - HOME CONSTRUCTION ----
     {
@@ -744,7 +770,9 @@ export const finishedProducts: FinishedProduct[] = [
         stock: 18,
         grade: 'A',
         image: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=800&auto=format&fit=crop',
-        unit: 'PIK Gresik',
+        unit: 'PIK Cepu',
+        wilayah: 'Wilayah Jawa Tengah',
+        sertifikat: 'FSC-PURE',
     },
     {
         id: 14,
@@ -757,7 +785,9 @@ export const finishedProducts: FinishedProduct[] = [
         stock: 40,
         grade: 'A',
         image: 'https://images.unsplash.com/photo-1510074377623-8cf13fb86c08?q=80&w=800&auto=format&fit=crop',
-        unit: 'PIK Saradan',
+        unit: 'PIK Cepu',
+        wilayah: 'Wilayah Jawa Tengah',
+        sertifikat: 'FSC-MIX',
     },
     {
         id: 15,
@@ -768,9 +798,11 @@ export const finishedProducts: FinishedProduct[] = [
         dimensions: '8x12x400cm',
         price: 650000,
         stock: 60,
-        grade: 'U' as unknown as 'A', // Forcing types for grade for consistency
+        grade: 'A',
         image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop',
-        unit: 'PIK Ngawi',
+        unit: 'PIK Randublatung',
+        wilayah: 'Wilayah Jawa Tengah',
+        sertifikat: 'FSC-PURE',
     },
     {
         id: 16,
@@ -783,6 +815,8 @@ export const finishedProducts: FinishedProduct[] = [
         stock: 500,
         grade: 'A',
         image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop',
-        unit: 'PIK Jatirogo',
+        unit: 'PIK Randublatung',
+        wilayah: 'Wilayah Jawa Tengah',
+        sertifikat: 'FSC-MIX',
     },
 ]

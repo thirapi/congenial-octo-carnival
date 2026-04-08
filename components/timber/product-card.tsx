@@ -34,6 +34,8 @@ interface Product {
   grade: string;
   image: string;
   unit: string;
+  wilayah: string;
+  sertifikat: string;
 }
 
 interface ProductCardProps {
@@ -66,7 +68,7 @@ export function ProductCard({ product }: ProductCardProps) {
             />
             {/* Wood Type Badge */}
             <div className="absolute top-3 left-3">
-              <span className="bg-white/90 backdrop-blur-sm text-primary font-bold text-[10px] px-2.5 py-1 rounded-full shadow-sm tracking-wider border border-white/50">
+              <span className="bg-white/95 backdrop-blur-sm text-primary font-semibold text-xs px-2.5 py-1 rounded-full shadow-sm border border-white/50">
                 {product.woodType}
               </span>
             </div>
@@ -74,7 +76,7 @@ export function ProductCard({ product }: ProductCardProps) {
             <div className="absolute top-3 right-3">
               <Badge
                 variant="secondary"
-                className="bg-primary text-white border-none font-bold text-[10px]"
+                className="bg-primary text-white border-none font-semibold text-xs py-0.5"
               >
                 Grade {product.grade}
               </Badge>
@@ -84,12 +86,12 @@ export function ProductCard({ product }: ProductCardProps) {
           {/* Product Info */}
           <div className="flex flex-col gap-2 p-4">
             <div>
-              <div className="flex items-center text-[10px] text-muted-foreground/60 mb-1 font-medium tracking-wide">
+              <div className="flex items-center text-xs text-muted-foreground/60 mb-1 font-medium">
                 <span>{product.category}</span>
                 <span className="mx-1.5 opacity-40">/</span>
                 <span>{product.subCategory}</span>
               </div>
-              <h3 className="text-sm font-bold text-foreground leading-tight group-hover:text-primary transition-colors line-clamp-2 min-h-[2.5rem]">
+              <h3 className="text-sm font-semibold text-foreground leading-tight group-hover:text-primary transition-colors line-clamp-2 min-h-[2.5rem]">
                 {product.name}
               </h3>
               <div className="flex items-center gap-1.5 mt-2 text-[11px] text-muted-foreground">
@@ -135,17 +137,17 @@ export function ProductCard({ product }: ProductCardProps) {
 
           {/* Right: Info */}
           <div className="flex flex-col p-8 md:p-10 bg-white">
-            <div className="flex items-center text-xs text-muted-foreground/70 mb-3 font-medium tracking-wide">
+            <div className="flex items-center text-xs text-muted-foreground/70 mb-3 font-medium">
               <span>{product.category}</span>
               <span className="mx-2 opacity-40">/</span>
               <span>{product.subCategory}</span>
             </div>
 
-            <DialogTitle className="text-2xl font-extrabold text-foreground mb-4 leading-tight">
+            <DialogTitle className="text-2xl font-semibold text-foreground mb-4 leading-tight">
               {product.name}
             </DialogTitle>
 
-            <div className="text-3xl font-black text-primary mb-10 tracking-tight">
+            <div className="text-3xl font-semibold text-primary mb-10">
               Rp {product.price.toLocaleString("id-ID")}
             </div>
 
@@ -155,10 +157,10 @@ export function ProductCard({ product }: ProductCardProps) {
                   <Ruler className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[10px] tracking-widest text-muted-foreground/60 font-bold mb-1">
+                  <div className="text-xs font-semibold text-muted-foreground/60 mb-1">
                     Dimensi Produk
                   </div>
-                  <div className="text-sm font-bold text-foreground">
+                  <div className="text-sm font-semibold text-foreground">
                     {product.dimensions}
                   </div>
                 </div>
@@ -169,11 +171,35 @@ export function ProductCard({ product }: ProductCardProps) {
                   <MapPin className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[10px] tracking-widest text-muted-foreground/60 font-bold mb-1">
-                    Unit Produksi
+                  <div className="text-xs font-semibold text-muted-foreground/60 mb-1">
+                    Wilayah & Unit
                   </div>
-                  <div className="text-sm font-bold text-foreground">
-                    {product.unit}
+                  <div className="text-sm font-semibold text-foreground">
+                    {product.wilayah} - {product.unit}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="mt-0.5 p-2 rounded-xl bg-primary/5 text-primary border border-primary/10">
+                  <Award className="w-4 h-4" />
+                </div>
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <div className="text-xs font-semibold text-muted-foreground/60 mb-1">
+                      Kualitas Produk
+                    </div>
+                    <div className="text-sm font-semibold text-foreground flex items-center gap-2">
+                       Grade {product.grade}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs font-semibold text-muted-foreground/60 mb-1">
+                      Sertifikasi
+                    </div>
+                    <div className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-primary/10 text-primary border border-primary/20">
+                      {product.sertifikat}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -183,25 +209,11 @@ export function ProductCard({ product }: ProductCardProps) {
                   <Package className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[10px] tracking-widest text-muted-foreground/60 font-bold mb-1">
+                  <div className="text-xs font-semibold text-muted-foreground/60 mb-1">
                     Ketersediaan Stok
                   </div>
-                  <div className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <div className="text-sm font-semibold text-foreground flex items-center gap-2">
                     {product.stock} Unit
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="mt-0.5 p-2 rounded-xl bg-primary/5 text-primary border border-primary/10">
-                  <Award className="w-4 h-4" />
-                </div>
-                <div>
-                  <div className="text-[10px] tracking-widest text-muted-foreground/60 font-bold mb-1">
-                    Kualitas Produk
-                  </div>
-                  <div className="text-sm font-bold text-foreground flex items-center gap-2">
-                    Grade {product.grade}
                   </div>
                 </div>
               </div>
@@ -209,7 +221,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
             <div className="mt-auto pt-8 border-t border-border space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-bold text-foreground">
+                <span className="text-sm font-semibold text-foreground">
                   Kuantitas
                 </span>
                 <div className="flex items-center p-1 bg-muted/30 rounded-lg border border-border/50">
@@ -218,9 +230,9 @@ export function ProductCard({ product }: ProductCardProps) {
                     className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-white hover:shadow-sm transition-all text-muted-foreground hover:text-primary disabled:opacity-30"
                     disabled={quantity <= 1}
                   >
-                    <span className="text-xl font-bold leading-none">-</span>
+                    <span className="text-xl font-semibold leading-none">-</span>
                   </button>
-                  <div className="w-12 text-center font-black text-foreground">
+                  <div className="w-12 text-center font-bold text-foreground">
                     {quantity}
                   </div>
                   <button
@@ -230,7 +242,7 @@ export function ProductCard({ product }: ProductCardProps) {
                     className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-white hover:shadow-sm transition-all text-muted-foreground hover:text-primary disabled:opacity-30"
                     disabled={quantity >= product.stock}
                   >
-                    <span className="text-xl font-bold leading-none">+</span>
+                    <span className="text-xl font-semibold leading-none">+</span>
                   </button>
                 </div>
               </div>
