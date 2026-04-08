@@ -93,22 +93,22 @@ function CheckoutContent() {
     {
       id: "bri",
       name: "BANK BRI",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/BRI_2025_%28with_full_name%29.svg/250px-BRI_2025_%28with_full_name%29.svg.png",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/BANK_BRI_logo.svg/1200px-BANK_BRI_logo.svg.png",
     },
     {
       id: "mandiri",
       name: "mandiri",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Bank_Mandiri_logo_2016.svg/1024px-Bank_Mandiri_logo_2016.svg.png",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Bank_Mandiri_logo_2016.svg/1200px-Bank_Mandiri_logo_2016.svg.png",
     },
     {
       id: "bni",
       name: "BNI",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Bank_Negara_Indonesia_logo_%282004%29.svg/250px-Bank_Negara_Indonesia_logo_%282004%29.svg.png",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Bank_Negara_Indonesia_logo_%282004%29.svg/1200px-Bank_Negara_Indonesia_logo_%282004%29.svg.png",
     },
     {
       id: "bca",
       name: "BCA",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bank_Central_Asia.svg/1024px-Bank_Central_Asia.svg.png",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bank_Central_Asia.svg/1200px-Bank_Central_Asia.svg.png",
     },
   ];
 
@@ -140,12 +140,12 @@ function CheckoutContent() {
     <div className="min-h-screen bg-[#FBFBFB]">
       <Header location={location} setLocation={setLocation} />
 
-      <main className="max-w-7xl mx-auto px-4 py-12">
+      <main className="max-w-7xl mx-auto px-4 pt-40 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           {/* Left Column: Checkout Details & Courier */}
           <div className="space-y-10">
             <div>
-              <h1 className="text-3xl font-black text-[#1B4332] mb-8">
+              <h1 className="text-3xl font-semibold text-[#1B4332] mb-8">
                 Checkout
               </h1>
 
@@ -158,11 +158,11 @@ function CheckoutContent() {
                     <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-50">
                       <div className="flex items-center gap-2">
                         <Building2 className="w-5 h-5 text-[#1B4332]" />
-                        <span className="font-black text-[#1B4332] uppercase tracking-wider">
+                        <span className="font-semibold text-[#1B4332]">
                           {unit}
                         </span>
                       </div>
-                      <button className="text-[10px] font-bold text-[#40916C] uppercase tracking-widest hover:underline">
+                      <button className="text-[10px] font-semibold text-[#40916C] hover:underline">
                         Detail
                       </button>
                     </div>
@@ -180,20 +180,20 @@ function CheckoutContent() {
                             </span>
                           </div>
 
-                          <div className="grid grid-cols-2 gap-4">
+                           <div className="grid grid-cols-2 gap-4">
                             <div className="flex flex-col">
-                              <span className="text-[10px] text-muted-foreground uppercase font-black tracking-widest leading-none mb-1.5">
+                              <span className="text-[10px] text-muted-foreground font-semibold leading-none mb-1.5">
                                 Volume
                               </span>
-                              <span className="font-bold text-[#1B4332] text-sm">
+                              <span className="font-semibold text-[#1B4332] text-sm">
                                 {item.volume ? item.volume.toFixed(4) : "-"}
                               </span>
                             </div>
                             <div className="flex flex-col">
-                              <span className="text-[10px] text-muted-foreground uppercase font-black tracking-widest leading-none mb-1.5">
+                              <span className="text-[10px] text-muted-foreground font-semibold leading-none mb-1.5">
                                 Jumlah
                               </span>
-                              <span className="font-bold text-[#1B4332] text-sm">
+                              <span className="font-semibold text-[#1B4332] text-sm">
                                 {item.quantity}
                               </span>
                             </div>
@@ -220,10 +220,10 @@ function CheckoutContent() {
                         </span>
                       </div>
                       <div className="flex justify-between items-center pt-3 border-t border-dashed border-gray-100">
-                        <span className="font-black text-[#1B4332] text-lg">
+                        <span className="font-semibold text-[#1B4332] text-lg">
                           Order Total
                         </span>
-                        <span className="text-xl font-black text-[#1B4332]">
+                        <span className="text-xl font-semibold text-[#1B4332]">
                           Rp {total.toLocaleString()}
                         </span>
                       </div>
@@ -237,7 +237,7 @@ function CheckoutContent() {
             <div>
               <div className="flex items-center gap-2 mb-6">
                 <Truck className="w-6 h-6 text-[#1B4332]" />
-                <h2 className="text-xl font-black text-[#1B4332]">
+                <h2 className="text-xl font-semibold text-[#1B4332]">
                   Pilih Jasa Pengiriman
                 </h2>
               </div>
@@ -260,10 +260,10 @@ function CheckoutContent() {
                     </div>
                     <div className="flex-1">
                       <div className="flex justify-between items-center">
-                        <p className="font-black text-[#1B4332]">
+                        <p className="font-semibold text-[#1B4332]">
                           {courier.name}
                         </p>
-                        <p className="text-sm font-bold text-[#1B4332]">
+                        <p className="text-sm font-semibold text-[#1B4332]">
                           {courier.price === 0
                             ? "Gratis"
                             : `Rp ${courier.price.toLocaleString()}`}
@@ -284,7 +284,7 @@ function CheckoutContent() {
 
           {/* Right Column: Payment Channels */}
           <div className="lg:sticky lg:top-40 space-y-8">
-            <h2 className="text-xl font-black text-[#1B4332]">
+            <h2 className="text-xl font-semibold text-[#1B4332]">
               Pilih Channel Pembayaran
             </h2>
 
@@ -302,17 +302,12 @@ function CheckoutContent() {
                   <img
                     src={channel.logo}
                     alt={channel.name}
-                    className={`h-10 w-auto object-contain mb-2 transition-all ${
+                    className={`h-8 w-auto object-contain transition-all ${
                       selectedPayment === channel.id
                         ? "grayscale-0 opacity-100 scale-105"
                         : "grayscale group-hover:grayscale-0 opacity-80 group-hover:opacity-100"
                     }`}
                   />
-                  <span
-                    className={`text-[10px] font-bold uppercase tracking-widest ${selectedPayment === channel.id ? "text-[#CC3F0C]" : "text-gray-400"}`}
-                  >
-                    {channel.name}
-                  </span>
 
                   {selectedPayment === channel.id && (
                     <div className="absolute -top-2 -right-2 bg-[#CC3F0C] text-white p-1 rounded-full border-2 border-white shadow-sm">
@@ -331,7 +326,7 @@ function CheckoutContent() {
               </p>
             </div>
 
-            <Button className="w-full bg-[#1B4332] hover:bg-[#2D6A4F] text-white h-16 rounded-2xl font-black text-lg shadow-xl shadow-green-900/20 transition-all active:scale-[0.98]">
+            <Button className="w-full bg-[#1B4332] hover:bg-[#2D6A4F] text-white h-12 rounded-xl font-semibold text-sm shadow-lg shadow-green-900/20 transition-all active:scale-[0.98]">
               Konfirmasi Pesanan
             </Button>
           </div>
@@ -343,28 +338,28 @@ function CheckoutContent() {
         <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-[#40916C]/10 flex items-center justify-center text-[#40916C] font-bold text-sm">
+              <div className="w-8 h-8 rounded-full bg-[#40916C]/10 flex items-center justify-center text-[#40916C] font-semibold text-sm">
                 1
               </div>
-              <span className="text-sm font-bold text-[#1B4332]">
+              <span className="text-sm font-semibold text-[#1B4332]">
                 Pilih Produk
               </span>
             </div>
             <ChevronRight className="w-4 h-4 text-gray-300" />
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-[#40916C]/10 flex items-center justify-center text-[#40916C] font-bold text-sm">
+              <div className="w-8 h-8 rounded-full bg-[#40916C]/10 flex items-center justify-center text-[#40916C] font-semibold text-sm">
                 2
               </div>
-              <span className="text-sm font-bold text-[#1B4332]">
+              <span className="text-sm font-semibold text-[#1B4332]">
                 Pembayaran
               </span>
             </div>
             <ChevronRight className="w-4 h-4 text-gray-300" />
             <div className="flex items-center gap-2 opacity-30">
-              <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 font-bold text-sm">
+              <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 font-semibold text-sm">
                 3
               </div>
-              <span className="text-sm font-bold text-gray-400">Selesai</span>
+              <span className="text-sm font-semibold text-gray-400">Selesai</span>
             </div>
           </div>
           <p className="text-xs text-muted-foreground font-medium">

@@ -28,6 +28,25 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [finishedItems, setFinishedItems] = useState<FinishedCartItem[]>([]);
   const [rstItems, setRstItems] = useState<RSTProduct[]>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Load from localStorage on mount
+  useEffect(() => {
+    const savedFinished = localStorage.getItem("tokoperhutani-cart-finished");
+    const savedRst = localStorage.getItem("tokoperhutani-cart-rst");
+    
+    if (savedFinished) setFinishedItems(JSON.parse(savedFinished));
+    if (savedRst) setRstItems(JSON.parse(savedRst));
+    
+    setIsInitialized(true);
+  }, []);
+
+  // Save to localStorage when items change
+  useEffect(() => {
+    if (!isInitialized) return;
+    localStorage.setItem("tokoperhutani-cart-finished", JSON.stringify(finishedItems));
+    localStorage.setItem("tokoperhutani-cart-rst", JSON.stringify(rstItems));
+  }, [finishedItems, rstItems, isInitialized]);
 
   // Finished Products Logic
   const addFinishedItem = (product: FinishedProduct, quantity: number) => {

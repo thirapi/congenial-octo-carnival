@@ -86,6 +86,26 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
   };
 
   const [isScrolled, setIsScrolled] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [cartTab, setCartTab] = useState("finished");
+
+  useEffect(() => {
+    if (cartOpen) {
+      // If only one category contains items, pick that one
+      if (totalFinishedQuantity === 0 && totalRSTQuantity > 0) {
+        setCartTab("rst");
+      } else if (totalRSTQuantity === 0 && totalFinishedQuantity > 0) {
+        setCartTab("finished");
+      } else {
+        // If both have items or both are empty, pick based on current page
+        if (pathname === "/rst") {
+          setCartTab("rst");
+        } else {
+          setCartTab("finished");
+        }
+      }
+    }
+  }, [cartOpen, totalFinishedQuantity, totalRSTQuantity, pathname]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -141,9 +161,24 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
             {/* Bottom Row */}
             <div className="flex items-center justify-between pt-3">
               <div className="flex items-center gap-8">
-                <a href="/" className={cn("text-base font-semibold text-white hover:opacity-80 transition-all", pathname === "/" && "text-[#84cc16]")}>Produk Jadi</a>
-                <a href="/rst" className={cn("text-base font-semibold text-white hover:opacity-80 transition-all", pathname === "/rst" && "text-[#84cc16]")}>Kayu Gergajian Mentah (RST)</a>
-                <a href="/contract" className={cn("text-base font-semibold text-white hover:opacity-80 transition-all", pathname.includes("/contract") && "text-[#84cc16]")}>Pesanan Korporat</a>
+                <a 
+                  href="/" 
+                  className={cn("text-base font-semibold text-white hover:opacity-80 transition-all", pathname === "/" && "text-[#84cc16]")}
+                >
+                  Produk Jadi
+                </a>
+                <a 
+                  href="/rst" 
+                  className={cn("text-base font-semibold text-white hover:opacity-80 transition-all", pathname === "/rst" && "text-[#84cc16]")}
+                >
+                  Kayu Gergajian Mentah (RST)
+                </a>
+                <a 
+                  href="/contract" 
+                  className={cn("text-base font-semibold text-white hover:opacity-80 transition-all", pathname.includes("/contract") && "text-[#84cc16]")}
+                >
+                  Pesanan Korporat
+                </a>
               </div>
               
               <div className="flex items-center gap-6 pr-1">
@@ -151,45 +186,48 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
                    <Search className="w-5 h-5 text-white" strokeWidth={2.5} />
                  </button>
                  
-                 <Dialog>
+                 <Dialog open={cartOpen} onOpenChange={setCartOpen}>
                    <DialogTrigger asChild>
                      <button className="relative w-8 h-8 flex items-center justify-center hover:scale-110 transition-transform focus:outline-none">
                        <ShoppingCart className="w-5 h-5 text-white" strokeWidth={2.5} />
                        {totalCartItems > 0 && (
-                         <span className="absolute -top-1 -right-1 bg-[#84cc16] text-[#1B4332] text-[9px] min-w-[16px] h-[16px] flex items-center justify-center rounded-full font-bold shadow-sm">
+                         <span className="absolute -top-1 -right-1 bg-[#84cc16] text-[#1B4332] text-[9px] min-w-[16px] h-[16px] flex items-center justify-center rounded-full font-semibold shadow-sm">
                            {totalCartItems}
                          </span>
                        )}
                      </button>
                    </DialogTrigger>
-                   <DialogContent className="sm:max-w-[600px] p-0 overflow-hidden border-none shadow-2xl z-[100]">
-                     <DialogHeader className="p-6 bg-[#F8FDF5] border-b">
-                       <DialogTitle className="text-xl font-bold text-[#1B4332] flex items-center gap-3">
-                         <div className="p-2 bg-[#1B4332]/5 rounded-lg w-9 h-9 flex items-center justify-center">
-                           <ShoppingCart className="w-5 h-5 text-[#1B4332]" strokeWidth={2.5} />
-                         </div>
-                         Keranjang Belanja
-                       </DialogTitle>
-                     </DialogHeader>
-
-                     <Tabs defaultValue="finished" className="w-full">
-                       <div className="px-6 py-4 bg-white border-b">
-                         <TabsList className="grid w-full grid-cols-2 h-11 p-1 bg-muted/50 rounded-xl">
-                           <TabsTrigger
-                             value="finished"
-                             className="rounded-lg font-semibold"
-                           >
-                             Finished Product ({totalFinishedQuantity})
-                           </TabsTrigger>
-                           <TabsTrigger value="rst" className="rounded-lg font-semibold">
-                             RST ({totalRSTQuantity})
-                           </TabsTrigger>
-                         </TabsList>
-                       </div>
+                   <DialogContent className="sm:max-w-[600px] p-0 gap-0 overflow-hidden border-none shadow-2xl z-[100]">
+                      <DialogHeader className="px-6 pt-6 pb-2 bg-[#F8FDF5]">
+                        <DialogTitle className="text-xl font-semibold text-[#1B4332] flex items-center gap-3">
+                          <div className="p-2 bg-[#1B4332]/5 rounded-lg w-9 h-9 flex items-center justify-center">
+                            <ShoppingCart className="w-5 h-5 text-[#1B4332]" strokeWidth={2.5} />
+                          </div>
+                          Keranjang Belanja
+                        </DialogTitle>
+                      </DialogHeader>
+ 
+                      <Tabs value={cartTab} onValueChange={setCartTab} className="w-full bg-[#F8FDF5]">
+                        <div className="px-6 pb-5 pt-2">
+                          <TabsList className="grid w-full grid-cols-2 h-10 p-1 bg-[#1B4332]/5 rounded-lg">
+                            <TabsTrigger
+                              value="finished"
+                              className="rounded-md font-semibold text-xs data-[state=active]:bg-[#1B4332] data-[state=active]:text-white transition-all duration-200"
+                            >
+                              Finished Product ({totalFinishedQuantity})
+                            </TabsTrigger>
+                            <TabsTrigger 
+                              value="rst" 
+                              className="rounded-md font-semibold text-xs data-[state=active]:bg-[#1B4332] data-[state=active]:text-white transition-all duration-200"
+                            >
+                              RST ({totalRSTQuantity})
+                            </TabsTrigger>
+                          </TabsList>
+                        </div>
 
                        <TabsContent
                          value="finished"
-                         className="outline-none h-[400px] flex flex-col"
+                         className="outline-none min-h-[400px] flex flex-col"
                        >
                          <div className="flex-1 overflow-auto px-6 py-2">
                            {finishedItems.length === 0 ? (
@@ -240,7 +278,7 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
                                <span className="text-xs font-semibold text-muted-foreground">
                                  Total Pembayaran
                                </span>
-                               <span className="text-2xl font-bold text-[#1B4332]">
+                               <span className="text-2xl font-semibold text-[#1B4332]">
                                  Rp{" "}
                                  {finishedItems
                                    .reduce(
@@ -263,14 +301,14 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
 
                        <TabsContent
                          value="rst"
-                         className="outline-none h-[400px] flex flex-col"
+                         className="outline-none min-h-[400px] flex flex-col"
                        >
                          <div className="flex-1 overflow-auto px-6 py-2">
                            {rstItems.length === 0 ? (
                              <div className="flex flex-col items-center justify-center py-20 text-muted-foreground/40">
                                <Logs className="w-16 h-16 mb-4 opacity-10" />
                                <p className="text-sm font-semibold">
-                                 Belum ada RST dipilih
+                                 Belum ada produk di keranjang
                                </p>
                              </div>
                            ) : (
@@ -314,7 +352,7 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
                                <span className="text-xs font-semibold text-muted-foreground">
                                  Estimasi Harga RST
                                </span>
-                               <span className="text-2xl font-bold text-[#1B4332]">
+                               <span className="text-2xl font-semibold text-[#1B4332]">
                                  Rp{" "}
                                  {rstItems
                                    .reduce(
