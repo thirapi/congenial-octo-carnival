@@ -19,9 +19,9 @@ export default function RstPage() {
         setLocation={setLocation}
       />
       
-      <div className="mx-auto w-full max-w-7xl px-4 pt-[380px] pb-12 relative z-20">
+      <div className="mx-auto w-full max-w-7xl px-4 pt-32 pb-12 relative z-20">
         <div className="mt-2">
-          <RawTimberTab location={location} />
+          <RawTimberTab location={location} setLocation={setLocation} />
         </div>
       </div>
     </main>
