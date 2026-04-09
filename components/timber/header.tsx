@@ -177,7 +177,7 @@ export function Header({ location, setLocation, activeTab }: HeaderProps) {
                   href="/contract" 
                   className={cn("text-base font-semibold text-white hover:opacity-80 transition-all", pathname.includes("/contract") && "text-[#84cc16]")}
                 >
-                  Pesanan Korporat
+                  Kontrak
                 </a>
               </div>
               
